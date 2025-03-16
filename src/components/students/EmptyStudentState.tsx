@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import AddStudentDialog from './AddStudentDialog';
 
 interface EmptyStudentStateProps {
   hasFilters: boolean;
@@ -26,14 +27,7 @@ const EmptyStudentState = ({ hasFilters }: EmptyStudentStateProps) => {
           : t('students.addFirstStudent')
         }
       </p>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            {t('students.addStudent')}
-          </Button>
-        </DialogTrigger>
-      </Dialog>
+      <AddStudentDialog onAddStudent={() => {}} />
     </div>
   );
 };

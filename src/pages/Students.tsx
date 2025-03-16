@@ -13,6 +13,8 @@ import StudentDetails from '@/components/StudentDetails';
 import AddStudentDialog from '@/components/students/AddStudentDialog';
 import StudentFilters from '@/components/students/StudentFilters';
 import StudentsList from '@/components/students/StudentsList';
+import StudentsHeader from '@/components/students/StudentsHeader';
+import StudentDetailView from '@/components/students/StudentDetailView';
 
 const Students = () => {
   const { t } = useTranslation();
@@ -108,27 +110,13 @@ const Students = () => {
         animate="show"
         className="space-y-6"
       >
-        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
-          <motion.div variants={item}>
-            <h1 className="text-3xl font-bold tracking-tight">{t('students.title')}</h1>
-            <p className="text-muted-foreground mt-1">
-              {t('students.manage')}
-            </p>
-          </motion.div>
-
-          <motion.div variants={item} className="flex gap-2">
-            <Button 
-              variant="outline" 
-              onClick={handleExportStudents} 
-              disabled={filteredStudents.length === 0}
-            >
-              <FileDown className="h-4 w-4 mr-2" />
-              {t('students.exportCSV')}
-            </Button>
-            
-            <AddStudentDialog onAddStudent={handleAddStudent} />
-          </motion.div>
-        </div>
+        <motion.div variants={item}>
+          <StudentsHeader 
+            onExportStudents={handleExportStudents} 
+            onAddStudent={handleAddStudent}
+            filteredStudentsCount={filteredStudents.length}
+          />
+        </motion.div>
 
         <motion.div variants={item} className="grid gap-4">
           <StudentFilters
@@ -143,16 +131,10 @@ const Students = () => {
 
         <motion.div variants={item}>
           {selectedStudent ? (
-            <div>
-              <Button 
-                variant="outline" 
-                className="mb-4"
-                onClick={() => setSelectedStudent(null)}
-              >
-                {t('students.backToList')}
-              </Button>
-              <StudentDetails student={selectedStudent} />
-            </div>
+            <StudentDetailView 
+              student={selectedStudent} 
+              onBack={() => setSelectedStudent(null)} 
+            />
           ) : (
             <StudentsList
               students={filteredStudents}
