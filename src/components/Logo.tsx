@@ -15,8 +15,8 @@ const Logo = ({ size = 'md', className }: LogoProps) => {
 
   return (
     <div className={cn('font-display font-semibold text-primary', sizeClasses[size], className)}>
-      <span className="text-primary">Lingua</span>
-      <span className="text-foreground">Link</span>
+      <span className="text-primary">Pai</span>
+      <span className="text-foreground">len</span>
     </div>
   );
 };

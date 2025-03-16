@@ -48,7 +48,7 @@ const LandingFooter = () => {
         
         <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} LinguaLink. {t('landing.footer.rights')}.
+            &copy; {new Date().getFullYear()} Pailen. {t('landing.footer.rights')}.
           </p>
           
           <div className="flex space-x-6 mt-4 md:mt-0">
