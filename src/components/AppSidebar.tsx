@@ -65,7 +65,7 @@ const AppSidebar = () => {
       icon: CreditCard,
       path: '/subscription',
       badge: user?.subscription?.status === 'trialing' ? 'Trial' : undefined,
-      badgeVariant: 'secondary',
+      badgeVariant: 'secondary' as const, // Fixed: explicitly typed as a const to match Badge variant types
     },
     {
       title: 'Settings',
@@ -123,7 +123,7 @@ const AppSidebar = () => {
                   <item.icon className="h-4 w-4" />
                   <span className="text-sm font-medium">{item.title}</span>
                   {item.badge && (
-                    <Badge variant={item.badgeVariant || "outline"} className="ml-auto">
+                    <Badge variant={item.badgeVariant as "default" | "destructive" | "outline" | "secondary" || "outline"} className="ml-auto">
                       {item.badge}
                     </Badge>
                   )}
