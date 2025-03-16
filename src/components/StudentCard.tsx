@@ -56,7 +56,7 @@ const StudentCard = ({ student }: StudentCardProps) => {
               {student.language}
             </Badge>
             <Badge className={`${getLevelColor(student.level)} px-2 py-0.5 text-xs font-medium rounded-full`}>
-              {student.level}
+              {t('students.level')} {student.level}
             </Badge>
           </div>
         </div>
@@ -64,7 +64,12 @@ const StudentCard = ({ student }: StudentCardProps) => {
       <CardContent className="pb-3">
         <div className="flex items-center text-sm text-muted-foreground">
           <Clock className="h-3.5 w-3.5 mr-1.5 opacity-70" />
-          <span>{student.hoursPerWeek} {t('students.hoursPerWeek').split(' ')[0]}</span>
+          <span>
+            {student.hoursPerWeek} 
+            {student.hoursPerWeek === 1 
+              ? t('students.hourPerWeek') 
+              : t('students.hoursPerWeek')}
+          </span>
         </div>
       </CardContent>
       <CardFooter className="pt-0 pb-4">

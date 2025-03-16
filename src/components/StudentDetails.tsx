@@ -82,11 +82,16 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ student }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex items-center">
               <BookOpen className="h-4 w-4 mr-2 text-muted-foreground" />
-              <span>{student.language}</span>
+              <span>{t('students.language')}: {student.language}</span>
             </div>
             <div className="flex items-center">
               <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-              <span>{student.hoursPerWeek} {student.hoursPerWeek !== 1 ? t('students.hoursPerWeek') : t('students.hourPerWeek')}</span>
+              <span>
+                {student.hoursPerWeek} 
+                {student.hoursPerWeek === 1 
+                  ? t('students.hourPerWeek') 
+                  : t('students.hoursPerWeek')}
+              </span>
             </div>
             <div className="flex items-center">
               <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
