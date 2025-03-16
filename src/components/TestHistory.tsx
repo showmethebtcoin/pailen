@@ -44,7 +44,7 @@ const TestHistory: React.FC<TestHistoryProps> = ({
                   <h4 className="font-medium">{test.title}</h4>
                   <Badge variant={
                     test.status === 'sent' ? 'default' :
-                    test.status === 'completed' ? 'success' : 'outline'
+                    test.status === 'completed' ? 'secondary' : 'outline'
                   }>
                     {test.status.charAt(0).toUpperCase() + test.status.slice(1)}
                   </Badge>
