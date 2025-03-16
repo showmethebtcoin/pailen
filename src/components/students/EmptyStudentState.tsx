@@ -7,12 +7,14 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import AddStudentDialog from './AddStudentDialog';
+import { Student } from '@/types/student';
 
 interface EmptyStudentStateProps {
   hasFilters: boolean;
+  onAddStudent?: (student: Student) => void;
 }
 
-const EmptyStudentState = ({ hasFilters }: EmptyStudentStateProps) => {
+const EmptyStudentState = ({ hasFilters, onAddStudent }: EmptyStudentStateProps) => {
   const { t } = useTranslation();
 
   return (
@@ -32,8 +34,8 @@ const EmptyStudentState = ({ hasFilters }: EmptyStudentStateProps) => {
         }
       </p>
       
-      {!hasFilters && (
-        <AddStudentDialog onAddStudent={() => {}} />
+      {!hasFilters && onAddStudent && (
+        <AddStudentDialog onAddStudent={onAddStudent} />
       )}
     </div>
   );

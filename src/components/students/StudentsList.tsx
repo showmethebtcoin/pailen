@@ -9,20 +9,22 @@ interface StudentsListProps {
   hasFilters: boolean;
   onViewStudent: (student: Student) => void;
   onDeleteStudent: (studentId: string) => void;
+  onAddStudent?: (student: Student) => void;
 }
 
 const StudentsList = ({ 
   students, 
   hasFilters,
   onViewStudent, 
-  onDeleteStudent 
+  onDeleteStudent,
+  onAddStudent
 }: StudentsListProps) => {
   const { t } = useTranslation();
   
   console.log("StudentsList rendering with", students.length, "students");
 
   if (!students || students.length === 0) {
-    return <EmptyStudentState hasFilters={hasFilters} />;
+    return <EmptyStudentState hasFilters={hasFilters} onAddStudent={onAddStudent} />;
   }
 
   return (

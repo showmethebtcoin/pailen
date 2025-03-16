@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/select';
 
 export const languageOptions = [
-  { value: '', translationKey: 'students.allLanguages' },
+  { value: 'all', translationKey: 'students.allLanguages' },
   { value: 'English', translationKey: 'English' },
   { value: 'Spanish', translationKey: 'Spanish' },
   { value: 'French', translationKey: 'French' },
@@ -24,7 +24,7 @@ export const languageOptions = [
 ];
 
 export const levelOptions = [
-  { value: '', translationKey: 'students.allLevels' },
+  { value: 'all', translationKey: 'students.allLevels' },
   { value: 'A1', translationKey: 'A1' },
   { value: 'A2', translationKey: 'A2' },
   { value: 'B1', translationKey: 'B1' },
@@ -74,8 +74,8 @@ const StudentFilters = ({
           <div className="flex items-center space-x-2">
             <Filter className="h-4 w-4 text-muted-foreground" />
             <Select
-              value={languageFilter}
-              onValueChange={setLanguageFilter}
+              value={languageFilter || 'all'}
+              onValueChange={(value) => setLanguageFilter(value === 'all' ? '' : value)}
             >
               <SelectTrigger className="h-9">
                 <SelectValue placeholder={t('students.language')} />
@@ -83,7 +83,7 @@ const StudentFilters = ({
               <SelectContent>
                 {languageOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
-                    {option.value ? option.value : t(option.translationKey)}
+                    {option.value === 'all' ? t(option.translationKey) : option.value}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -92,8 +92,8 @@ const StudentFilters = ({
           <div className="flex items-center space-x-2">
             <Filter className="h-4 w-4 text-muted-foreground" />
             <Select
-              value={levelFilter}
-              onValueChange={setLevelFilter}
+              value={levelFilter || 'all'}
+              onValueChange={(value) => setLevelFilter(value === 'all' ? '' : value)}
             >
               <SelectTrigger className="h-9">
                 <SelectValue placeholder={t('students.level')} />
@@ -101,7 +101,7 @@ const StudentFilters = ({
               <SelectContent>
                 {levelOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
-                    {option.value ? option.value : t(option.translationKey)}
+                    {option.value === 'all' ? t(option.translationKey) : option.value}
                   </SelectItem>
                 ))}
               </SelectContent>
