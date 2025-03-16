@@ -5,9 +5,12 @@ import { Button } from '@/components/ui/button';
 import Logo from '@/components/Logo';
 import { motion } from 'framer-motion';
 import GlassCard from '@/components/GlassCard';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const Landing = () => {
   const [scrolled, setScrolled] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,13 +33,14 @@ const Landing = () => {
           <div className="flex items-center justify-between h-16 sm:h-20">
             <Logo size="md" />
             <div className="flex items-center space-x-4">
+              <LanguageSwitcher />
               <Link to="/login">
                 <Button variant="ghost" size="sm">
-                  Sign in
+                  {t('landing.hero.signIn')}
                 </Button>
               </Link>
               <Link to="/register">
-                <Button size="sm">Get Started</Button>
+                <Button size="sm">{t('landing.hero.getStarted')}</Button>
               </Link>
             </div>
           </div>
@@ -58,7 +62,7 @@ const Landing = () => {
               transition={{ duration: 0.5 }}
             >
               <span className="inline-block px-3 py-1 text-sm font-medium text-primary bg-primary/10 rounded-full mb-4">
-                Language Teaching Simplified
+                {t('landing.hero.tagline')}
               </span>
             </motion.div>
             
@@ -68,7 +72,7 @@ const Landing = () => {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6"
             >
-              The Perfect Platform for Language Teachers
+              {t('landing.hero.title')}
             </motion.h1>
             
             <motion.p
@@ -77,7 +81,7 @@ const Landing = () => {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-xl text-muted-foreground mb-8"
             >
-              Manage your students, track progress, and organize your teaching schedule all in one elegant, intuitive platform.
+              {t('landing.hero.description')}
             </motion.p>
             
             <motion.div
@@ -88,12 +92,12 @@ const Landing = () => {
             >
               <Link to="/register">
                 <Button size="lg" className="w-full sm:w-auto">
-                  Get Started for Free
+                  {t('landing.hero.getStarted')}
                 </Button>
               </Link>
               <Link to="/login">
                 <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                  Sign In
+                  {t('landing.hero.signIn')}
                 </Button>
               </Link>
             </motion.div>
@@ -105,9 +109,9 @@ const Landing = () => {
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Everything You Need to Succeed</h2>
+            <h2 className="text-3xl font-bold mb-4">{t('landing.features.title')}</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Our platform is designed specifically for language teachers, with all the tools you need to manage your teaching business.
+              {t('landing.features.description')}
             </p>
           </div>
 
@@ -124,9 +128,9 @@ const Landing = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Student Management</h3>
+                <h3 className="text-xl font-semibold mb-2">{t('landing.features.studentManagement.title')}</h3>
                 <p className="text-muted-foreground">
-                  Keep track of all your students, their language levels, progress, and contact information in one place.
+                  {t('landing.features.studentManagement.description')}
                 </p>
               </GlassCard>
             </motion.div>
@@ -143,9 +147,9 @@ const Landing = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Scheduling & Calendar</h3>
+                <h3 className="text-xl font-semibold mb-2">{t('landing.features.scheduling.title')}</h3>
                 <p className="text-muted-foreground">
-                  Organize your teaching schedule, set reminders, and manage bookings with an intuitive calendar interface.
+                  {t('landing.features.scheduling.description')}
                 </p>
               </GlassCard>
             </motion.div>
@@ -162,9 +166,9 @@ const Landing = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">Progress Tracking</h3>
+                <h3 className="text-xl font-semibold mb-2">{t('landing.features.progress.title')}</h3>
                 <p className="text-muted-foreground">
-                  Monitor student progress and performance with detailed analytics and customizable reports.
+                  {t('landing.features.progress.description')}
                 </p>
               </GlassCard>
             </motion.div>
@@ -180,16 +184,16 @@ const Landing = () => {
             
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your teaching experience?</h2>
+                <h2 className="text-2xl md:text-3xl font-bold mb-4">{t('landing.cta.title')}</h2>
                 <p className="text-lg text-muted-foreground mb-6 md:mb-0">
-                  Join thousands of language teachers who are simplifying their workflow and focusing on what matters most: teaching.
+                  {t('landing.cta.description')}
                 </p>
               </div>
               
               <div className="shrink-0">
                 <Link to="/register">
                   <Button size="lg" className="w-full md:w-auto">
-                    Get Started Today
+                    {t('landing.cta.action')}
                   </Button>
                 </Link>
               </div>
@@ -205,35 +209,35 @@ const Landing = () => {
             <div className="mb-6 md:mb-0">
               <Logo size="md" />
               <p className="text-muted-foreground mt-2">
-                The ultimate platform for language teachers
+                {t('landing.footer.slogan')}
               </p>
             </div>
             
             <div className="flex flex-col md:flex-row gap-8">
               <div>
-                <h3 className="font-medium mb-3">Product</h3>
+                <h3 className="font-medium mb-3">{t('landing.footer.product')}</h3>
                 <ul className="space-y-2">
-                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Features</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Pricing</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-foreground">FAQ</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.features')}</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.pricing')}</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.faq')}</a></li>
                 </ul>
               </div>
               
               <div>
-                <h3 className="font-medium mb-3">Company</h3>
+                <h3 className="font-medium mb-3">{t('landing.footer.company')}</h3>
                 <ul className="space-y-2">
-                  <li><a href="#" className="text-muted-foreground hover:text-foreground">About</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Blog</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Contact</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.about')}</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.blog')}</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.contact')}</a></li>
                 </ul>
               </div>
               
               <div>
-                <h3 className="font-medium mb-3">Legal</h3>
+                <h3 className="font-medium mb-3">{t('landing.footer.legal')}</h3>
                 <ul className="space-y-2">
-                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Privacy</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Terms</a></li>
-                  <li><a href="#" className="text-muted-foreground hover:text-foreground">Cookie Policy</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.privacy')}</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.terms')}</a></li>
+                  <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.cookies')}</a></li>
                 </ul>
               </div>
             </div>
@@ -241,7 +245,7 @@ const Landing = () => {
           
           <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-muted-foreground">
-              &copy; {new Date().getFullYear()} LinguaLink. All rights reserved.
+              &copy; {new Date().getFullYear()} LinguaLink. {t('landing.footer.rights')}.
             </p>
             
             <div className="flex space-x-6 mt-4 md:mt-0">
