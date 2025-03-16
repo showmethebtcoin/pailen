@@ -28,7 +28,7 @@ const StudentDetailView = ({ student, onBack, onEditStudent }: StudentDetailView
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm" className="gap-2">
             <EditStudentDialog student={student} onEditStudent={onEditStudent} />
-            <span>{t('students.edit')}</span>
+            <span>Editar</span>
           </Button>
         </div>
       </div>
