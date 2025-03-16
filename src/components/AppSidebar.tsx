@@ -17,12 +17,15 @@ import {
   Calendar,
   Settings,
   LogOut,
-  BarChart
+  BarChart,
+  CreditCard,
+  ShieldCheck
 } from 'lucide-react';
 import Logo from './Logo';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 
 const AppSidebar = () => {
   const location = useLocation();
@@ -32,6 +35,9 @@ const AppSidebar = () => {
   useEffect(() => {
     setActivePath(location.pathname);
   }, [location.pathname]);
+
+  // For demo purposes, consider all users as admins
+  const isAdmin = true;
 
   const menuItems = [
     {
@@ -55,11 +61,27 @@ const AppSidebar = () => {
       path: '/analytics',
     },
     {
+      title: 'Subscription',
+      icon: CreditCard,
+      path: '/subscription',
+      badge: user?.subscription?.status === 'trialing' ? 'Trial' : undefined,
+      badgeVariant: 'secondary',
+    },
+    {
       title: 'Settings',
       icon: Settings,
       path: '/settings',
     },
   ];
+
+  // Add admin menu item for admin users
+  if (isAdmin) {
+    menuItems.push({
+      title: 'Admin',
+      icon: ShieldCheck,
+      path: '/admin',
+    });
+  }
 
   return (
     <Sidebar>
@@ -100,6 +122,11 @@ const AppSidebar = () => {
                 >
                   <item.icon className="h-4 w-4" />
                   <span className="text-sm font-medium">{item.title}</span>
+                  {item.badge && (
+                    <Badge variant={item.badgeVariant || "outline"} className="ml-auto">
+                      {item.badge}
+                    </Badge>
+                  )}
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>

@@ -2,12 +2,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { UserSubscription } from '@/types/student';
+import { getUserSubscription } from '@/utils/stripe';
+import { logActivity, LogLevel } from '@/utils/logger';
 
 // Types
 interface User {
   id: string;
   email: string;
   name: string;
+  subscription?: UserSubscription;
 }
 
 interface AuthContextType {
@@ -17,6 +21,8 @@ interface AuthContextType {
   register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
+  refreshSubscription: () => Promise<void>;
+  isSubscriptionActive: boolean;
 }
 
 // Default context value
@@ -27,6 +33,8 @@ const defaultContextValue: AuthContextType = {
   register: async () => {},
   logout: () => {},
   isAuthenticated: false,
+  refreshSubscription: async () => {},
+  isSubscriptionActive: false,
 };
 
 // Create the context
@@ -83,7 +91,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const token = localStorage.getItem('token');
         
         if (storedUser && token) {
-          setUser(JSON.parse(storedUser));
+          const userData = JSON.parse(storedUser);
+          
+          // Fetch subscription data
+          try {
+            const subscription = await getUserSubscription(userData.id);
+            userData.subscription = subscription;
+          } catch (err) {
+            console.error('Error fetching subscription:', err);
+          }
+          
+          setUser(userData);
+          
+          // Log activity
+          logActivity(userData.id, 'session.resumed', undefined, LogLevel.INFO);
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
@@ -97,21 +118,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     checkAuth();
   }, []);
 
+  // Refresh user subscription data
+  const refreshSubscription = async () => {
+    if (!user) return;
+    
+    try {
+      const subscription = await getUserSubscription(user.id);
+      setUser(prevUser => prevUser ? { ...prevUser, subscription } : null);
+    } catch (error) {
+      console.error('Error refreshing subscription:', error);
+      toast({
+        title: "Subscription Error",
+        description: "Failed to refresh subscription data",
+        variant: "destructive",
+      });
+    }
+  };
+
   // Login function
   const login = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const user = await mockLogin(email, password);
+      const userData = await mockLogin(email, password);
+      
+      try {
+        // Fetch subscription data
+        const subscription = await getUserSubscription(userData.id);
+        userData.subscription = subscription;
+      } catch (err) {
+        console.error('Error fetching subscription:', err);
+      }
       
       // Store user and token
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(userData));
       localStorage.setItem('token', 'mock-jwt-token'); // This would be a real JWT in production
       
-      setUser(user);
+      setUser(userData);
+      
+      // Log activity
+      logActivity(userData.id, 'auth.login', { email }, LogLevel.INFO);
       
       toast({
         title: "Login successful",
-        description: `Welcome back, ${user.name}!`,
+        description: `Welcome back, ${userData.name}!`,
       });
       
       navigate('/dashboard');
@@ -132,17 +181,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (email: string, password: string, name: string) => {
     try {
       setLoading(true);
-      const user = await mockRegister(email, password, name);
+      const userData = await mockRegister(email, password, name);
+      
+      // For demo purposes, create a trial subscription
+      userData.subscription = {
+        id: `sub_${Math.random().toString(36).substring(2, 15)}`,
+        userId: userData.id,
+        planId: 'basic',
+        status: 'trialing',
+        currentPeriodEnd: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+        createdAt: new Date().toISOString(),
+      };
       
       // Store user and token
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('user', JSON.stringify(userData));
       localStorage.setItem('token', 'mock-jwt-token'); // This would be a real JWT in production
       
-      setUser(user);
+      setUser(userData);
+      
+      // Log activity
+      logActivity(userData.id, 'auth.register', { email }, LogLevel.INFO);
       
       toast({
         title: "Registration successful",
-        description: `Welcome, ${user.name}!`,
+        description: `Welcome, ${userData.name}! You have a 14-day free trial.`,
       });
       
       navigate('/dashboard');
@@ -161,6 +223,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Logout function
   const logout = () => {
+    if (user) {
+      // Log activity before clearing user data
+      logActivity(user.id, 'auth.logout', undefined, LogLevel.INFO);
+    }
+    
     localStorage.removeItem('user');
     localStorage.removeItem('token');
     setUser(null);
@@ -171,6 +238,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const isSubscriptionActive = !!user?.subscription && 
+    ['active', 'trialing'].includes(user.subscription.status);
+
   const value = {
     user,
     loading,
@@ -178,6 +248,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     register,
     logout,
     isAuthenticated: !!user,
+    refreshSubscription,
+    isSubscriptionActive,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -189,14 +261,27 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, isSubscriptionActive, user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      navigate('/login');
+    if (!loading) {
+      if (!isAuthenticated) {
+        navigate('/login');
+      } else if (!isSubscriptionActive && !location.pathname.includes('/subscription')) {
+        // Redirect to subscription page if the user doesn't have an active subscription
+        toast({
+          title: "Subscription Required",
+          description: user?.subscription?.status === 'trialing' 
+            ? "Your trial period has ended. Please subscribe to continue."
+            : "Please subscribe to access this feature.",
+          variant: "destructive",
+        });
+        navigate('/subscription');
+      }
     }
-  }, [isAuthenticated, loading, navigate]);
+  }, [isAuthenticated, isSubscriptionActive, loading, navigate, user]);
 
   if (loading) {
     return (

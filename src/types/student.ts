@@ -28,3 +28,32 @@ export interface TestGenerationOptions {
   questionCount?: number;
   includeAnswers?: boolean;
 }
+
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  price: number;
+  interval: 'month' | 'year';
+  features: string[];
+  studentLimit: number | null;
+  isPopular?: boolean;
+}
+
+export interface UserSubscription {
+  id: string;
+  userId: string;
+  planId: string;
+  status: 'trialing' | 'active' | 'canceled' | 'inactive';
+  currentPeriodEnd: string;
+  createdAt: string;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+}
+
+export interface ActivityLog {
+  id: string;
+  userId: string;
+  action: string;
+  details?: Record<string, any>;
+  timestamp: string;
+}

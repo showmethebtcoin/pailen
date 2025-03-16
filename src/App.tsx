@@ -13,6 +13,8 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Students from "./pages/Students";
 import NotFound from "./pages/NotFound";
+import Subscription from "./pages/Subscription";
+import Admin from "./pages/Admin";
 
 // Components
 import AppLayout from "./components/AppLayout";
@@ -47,6 +49,8 @@ const App = () => {
                 >
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/students" element={<Students />} />
+                  <Route path="/subscription" element={<Subscription />} />
+                  <Route path="/admin" element={<Admin />} />
                   <Route path="/schedule" element={<div className="p-4">Schedule page - Coming soon</div>} />
                   <Route path="/analytics" element={<div className="p-4">Analytics page - Coming soon</div>} />
                   <Route path="/settings" element={<div className="p-4">Settings page - Coming soon</div>} />
