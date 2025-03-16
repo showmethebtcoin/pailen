@@ -89,7 +89,7 @@ const AppSidebar = () => {
         <SidebarMenu>
           {menuItems.map((item) => (
             <SidebarMenuItem key={item.path}>
-              <SidebarMenuButton asChild active={activePath === item.path}>
+              <SidebarMenuButton asChild isActive={activePath === item.path}>
                 <NavLink
                   to={item.path}
                   className={({ isActive }) => 
