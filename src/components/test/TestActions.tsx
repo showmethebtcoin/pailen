@@ -2,7 +2,8 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Test } from '@/types/student';
-import { Loader2, Send, Download, Copy } from 'lucide-react';
+import { Loader2, Send, Download, Copy, FileSparkles } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface TestActionsProps {
   generatedTest: Test | null;
@@ -21,32 +22,45 @@ const TestActions: React.FC<TestActionsProps> = ({
   onSendTest,
   onCopyToClipboard
 }) => {
+  const { toast } = useToast();
+  
+  const handleCopy = () => {
+    onCopyToClipboard();
+    toast({
+      title: "Copied to clipboard",
+      description: "Test content has been copied to your clipboard"
+    });
+  };
+
   if (!generatedTest) {
     return (
-      <Button onClick={onGenerateTest} disabled={isGenerating}>
+      <Button onClick={onGenerateTest} disabled={isGenerating} className="w-full sm:w-auto">
         {isGenerating ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Generating...
           </>
         ) : (
-          'Generate Test'
+          <>
+            <FileSparkles className="mr-2 h-4 w-4" />
+            Generate Test
+          </>
         )}
       </Button>
     );
   }
 
   return (
-    <div className="flex gap-2">
-      <Button variant="outline" onClick={onCopyToClipboard}>
+    <div className="flex flex-col sm:flex-row gap-2 w-full">
+      <Button variant="outline" onClick={handleCopy} className="flex-1">
         <Copy className="mr-2 h-4 w-4" />
         Copy
       </Button>
-      <Button variant="outline">
+      <Button variant="outline" className="flex-1">
         <Download className="mr-2 h-4 w-4" />
         Download
       </Button>
-      <Button onClick={onSendTest} disabled={isSending}>
+      <Button onClick={onSendTest} disabled={isSending} className="flex-1">
         {isSending ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />

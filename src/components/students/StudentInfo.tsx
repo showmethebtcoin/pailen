@@ -4,6 +4,7 @@ import { Student } from '@/types/student';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Clock, AtSign, BookOpen } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 interface StudentInfoProps {
   student: Student;
@@ -11,6 +12,15 @@ interface StudentInfoProps {
 
 const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
   const { t } = useTranslation();
+
+  const StudentDetail = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) => (
+    <div className="flex items-center">
+      {icon}
+      <span className="ml-2">
+        <span className="text-muted-foreground">{label}:</span> {value}
+      </span>
+    </div>
+  );
 
   return (
     <Card>
@@ -28,25 +38,24 @@ const StudentInfo: React.FC<StudentInfoProps> = ({ student }) => {
           </Badge>
         </div>
       </CardHeader>
+      <Separator className="mb-4" />
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="flex items-center">
-            <BookOpen className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span>{t('students.language')}: {student.language}</span>
-          </div>
-          <div className="flex items-center">
-            <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span>
-              {student.hoursPerWeek} 
-              {student.hoursPerWeek === 1 
-                ? t('students.hourPerWeek') 
-                : t('students.hoursPerWeek')}
-            </span>
-          </div>
-          <div className="flex items-center">
-            <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-            <span>{t('students.started')} {new Date(student.startDate).toLocaleDateString()}</span>
-          </div>
+          <StudentDetail 
+            icon={<BookOpen className="h-4 w-4 mr-2 text-muted-foreground" />} 
+            label={t('students.language')} 
+            value={student.language} 
+          />
+          <StudentDetail 
+            icon={<Clock className="h-4 w-4 mr-2 text-muted-foreground" />} 
+            label={student.hoursPerWeek === 1 ? t('students.hourPerWeek') : t('students.hoursPerWeek')} 
+            value={student.hoursPerWeek.toString()} 
+          />
+          <StudentDetail 
+            icon={<Calendar className="h-4 w-4 mr-2 text-muted-foreground" />} 
+            label={t('students.started')} 
+            value={new Date(student.startDate).toLocaleDateString()} 
+          />
         </div>
       </CardContent>
     </Card>
