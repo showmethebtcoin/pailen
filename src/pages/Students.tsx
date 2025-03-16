@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import PageTransition from '@/components/PageTransition';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,7 +11,17 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Plus, Search, Filter, MoreHorizontal, Trash2, Edit, Download } from 'lucide-react';
+import { 
+  Plus, 
+  Search, 
+  Filter, 
+  MoreHorizontal, 
+  Trash2, 
+  Edit, 
+  Download,
+  UserPlus,
+  FileDown
+} from 'lucide-react';
 import { Student } from '@/types/student';
 import { mockStudents } from '@/data/mockData';
 import StudentCard from '@/components/StudentCard';
@@ -34,6 +43,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
+import { downloadCSV } from '@/utils/export';
+import StudentDetails from '@/components/StudentDetails';
 
 const languageOptions = [
   { label: 'All Languages', value: '' },
@@ -64,6 +75,7 @@ const Students = () => {
   const [languageFilter, setLanguageFilter] = useState('');
   const [levelFilter, setLevelFilter] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [newStudent, setNewStudent] = useState<Partial<Student>>({
     name: '',
     email: '',
@@ -76,9 +88,7 @@ const Students = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Fetch students data (mock for now)
     const fetchStudents = async () => {
-      // In a real app, this would be an API call
       setStudents(mockStudents);
       setFilteredStudents(mockStudents);
     };
@@ -87,10 +97,8 @@ const Students = () => {
   }, []);
 
   useEffect(() => {
-    // Apply filters and search
     let result = students;
     
-    // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
@@ -100,12 +108,10 @@ const Students = () => {
       );
     }
     
-    // Apply language filter
     if (languageFilter) {
       result = result.filter(student => student.language === languageFilter);
     }
     
-    // Apply level filter
     if (levelFilter) {
       result = result.filter(student => student.level === levelFilter);
     }
@@ -114,7 +120,6 @@ const Students = () => {
   }, [searchQuery, languageFilter, levelFilter, students]);
 
   const handleAddStudent = () => {
-    // Validate form
     if (!newStudent.name || !newStudent.email || !newStudent.language || !newStudent.level) {
       toast({
         title: "Missing fields",
@@ -124,7 +129,6 @@ const Students = () => {
       return;
     }
     
-    // Create new student
     const student: Student = {
       id: `student-${Date.now()}`,
       name: newStudent.name || '',
@@ -135,10 +139,8 @@ const Students = () => {
       startDate: newStudent.startDate || new Date().toISOString().split('T')[0],
     };
     
-    // Add to state
     setStudents([student, ...students]);
     
-    // Close dialog and reset form
     setIsDialogOpen(false);
     setNewStudent({
       name: '',
@@ -165,6 +167,19 @@ const Students = () => {
       title: "Student removed",
       description: `${student.name} has been removed from your students list`,
     });
+  };
+
+  const handleExportStudents = () => {
+    downloadCSV(filteredStudents, 'language_students.csv');
+    
+    toast({
+      title: "Export Successful",
+      description: `${filteredStudents.length} students have been exported to CSV`,
+    });
+  };
+
+  const handleViewStudent = (student: Student) => {
+    setSelectedStudent(student);
   };
 
   const container = {
@@ -198,11 +213,16 @@ const Students = () => {
             </p>
           </motion.div>
 
-          <motion.div variants={item}>
+          <motion.div variants={item} className="flex gap-2">
+            <Button variant="outline" onClick={handleExportStudents} disabled={filteredStudents.length === 0}>
+              <FileDown className="h-4 w-4 mr-2" />
+              Export CSV
+            </Button>
+            
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button>
-                  <Plus className="h-4 w-4 mr-2" />
+                  <UserPlus className="h-4 w-4 mr-2" />
                   Add Student
                 </Button>
               </DialogTrigger>
@@ -365,69 +385,84 @@ const Students = () => {
             {(languageFilter || levelFilter || searchQuery) ? 'Found' : 'Total'}
           </h2>
           
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredStudents.map((student) => (
-              <Card key={student.id} className="overflow-hidden group relative">
-                <CardContent className="p-0">
-                  <div className="absolute top-2 right-2 z-10">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Open menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-[160px]">
-                        <DropdownMenuItem>
-                          <Edit className="mr-2 h-4 w-4" />
-                          <span>Edit Details</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Download className="mr-2 h-4 w-4" />
-                          <span>Export Data</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          className="text-destructive focus:text-destructive"
-                          onClick={() => handleDeleteStudent(student.id)}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          <span>Delete</span>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+          {selectedStudent ? (
+            <div>
+              <Button 
+                variant="outline" 
+                className="mb-4"
+                onClick={() => setSelectedStudent(null)}
+              >
+                Back to Students List
+              </Button>
+              <StudentDetails student={selectedStudent} />
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredStudents.map((student) => (
+                <Card key={student.id} className="overflow-hidden group relative">
+                  <CardContent className="p-0">
+                    <div className="absolute top-2 right-2 z-10">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Open menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-[160px]">
+                          <DropdownMenuItem onClick={() => handleViewStudent(student)}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            <span>View Details</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Download className="mr-2 h-4 w-4" />
+                            <span>Export Data</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="text-destructive focus:text-destructive"
+                            onClick={() => handleDeleteStudent(student.id)}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            <span>Delete</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                    <div onClick={() => handleViewStudent(student)} className="cursor-pointer">
+                      <StudentCard student={student} />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+              
+              {filteredStudents.length === 0 && (
+                <div className="col-span-full flex flex-col items-center justify-center p-12 text-center">
+                  <div className="rounded-full bg-muted p-3 mb-4">
+                    <Search className="h-6 w-6 text-muted-foreground" />
                   </div>
-                  <StudentCard student={student} />
-                </CardContent>
-              </Card>
-            ))}
-            
-            {filteredStudents.length === 0 && (
-              <div className="col-span-full flex flex-col items-center justify-center p-12 text-center">
-                <div className="rounded-full bg-muted p-3 mb-4">
-                  <Search className="h-6 w-6 text-muted-foreground" />
+                  <h3 className="text-lg font-medium">No students found</h3>
+                  <p className="text-muted-foreground mt-1 mb-4">
+                    {searchQuery || languageFilter || levelFilter 
+                      ? "Try adjusting your search or filter criteria"
+                      : "Add your first student to get started"
+                    }
+                  </p>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Student
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      {/* Same dialog content as above */}
+                    </DialogContent>
+                  </Dialog>
                 </div>
-                <h3 className="text-lg font-medium">No students found</h3>
-                <p className="text-muted-foreground mt-1 mb-4">
-                  {searchQuery || languageFilter || levelFilter 
-                    ? "Try adjusting your search or filter criteria"
-                    : "Add your first student to get started"
-                  }
-                </p>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Student
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    {/* Same dialog content as above */}
-                  </DialogContent>
-                </Dialog>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </PageTransition>
