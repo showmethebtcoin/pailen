@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import PageTransition from '@/components/PageTransition';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Student } from '@/types/student';
@@ -10,6 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 import { motion } from 'framer-motion';
 
 const Dashboard = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [students, setStudents] = useState<Student[]>([]);
   const [stats, setStats] = useState({
@@ -90,16 +92,16 @@ const Dashboard = () => {
         className="space-y-8"
       >
         <motion.div variants={item}>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('dashboard.title')}</h1>
           <p className="text-muted-foreground mt-1">
-            Welcome back, {user?.name}
+            {t('dashboard.welcome')}, {user?.name}
           </p>
         </motion.div>
 
         <motion.div variants={item} className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('dashboard.totalStudents')}</CardTitle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -118,13 +120,13 @@ const Dashboard = () => {
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalStudents}</div>
               <p className="text-xs text-muted-foreground">
-                Active students in your roster
+                {t('dashboard.activeStudents')}
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Weekly Hours</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('dashboard.weeklyHours')}</CardTitle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -141,13 +143,13 @@ const Dashboard = () => {
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalHours}</div>
               <p className="text-xs text-muted-foreground">
-                Total teaching hours per week
+                {t('dashboard.teachingHoursPerWeek')}
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Languages</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('dashboard.languages')}</CardTitle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -164,13 +166,13 @@ const Dashboard = () => {
             <CardContent>
               <div className="text-2xl font-bold">{Object.keys(stats.languagesCount).length}</div>
               <p className="text-xs text-muted-foreground">
-                Different languages you teach
+                {t('dashboard.differentLanguages')}
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Upcoming Classes</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('dashboard.upcomingClasses')}</CardTitle>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -188,7 +190,7 @@ const Dashboard = () => {
             <CardContent>
               <div className="text-2xl font-bold">12</div>
               <p className="text-xs text-muted-foreground">
-                Classes scheduled this week
+                {t('dashboard.classesScheduled')}
               </p>
             </CardContent>
           </Card>
@@ -198,9 +200,9 @@ const Dashboard = () => {
           <motion.div variants={item} className="col-span-4">
             <Card className="h-full">
               <CardHeader>
-                <CardTitle>Recent Students</CardTitle>
+                <CardTitle>{t('dashboard.recentStudents')}</CardTitle>
                 <CardDescription>
-                  Your most recently added students
+                  {t('dashboard.recentlyAddedStudents')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -216,9 +218,9 @@ const Dashboard = () => {
           <motion.div variants={item} className="col-span-3">
             <Card className="h-full">
               <CardHeader>
-                <CardTitle>Languages Distribution</CardTitle>
+                <CardTitle>{t('dashboard.languagesDistribution')}</CardTitle>
                 <CardDescription>
-                  Distribution of languages across your students
+                  {t('dashboard.languagesDistributionDesc')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="h-80 flex items-center justify-center">
@@ -250,9 +252,9 @@ const Dashboard = () => {
         <motion.div variants={item}>
           <Card>
             <CardHeader>
-              <CardTitle>Student Levels</CardTitle>
+              <CardTitle>{t('dashboard.studentLevels')}</CardTitle>
               <CardDescription>
-                Distribution of proficiency levels among your students
+                {t('dashboard.studentLevelsDesc')}
               </CardDescription>
             </CardHeader>
             <CardContent className="h-80">
@@ -269,8 +271,8 @@ const Dashboard = () => {
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip 
-                    formatter={(value) => [`${value} students`, 'Count']}
-                    labelFormatter={(name) => `Level ${name}`}
+                    formatter={(value) => [`${value} students`, t('dashboard.count')]}
+                    labelFormatter={(name) => `${t('dashboard.level')} ${name}`}
                   />
                   <Bar dataKey="value" fill="#3b82f6" radius={[4, 4, 0, 0]} />
                 </BarChart>
