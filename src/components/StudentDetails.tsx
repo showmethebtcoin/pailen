@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Student, Test } from '@/types/student';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,6 +23,7 @@ interface StudentDetailsProps {
 }
 
 const StudentDetails: React.FC<StudentDetailsProps> = ({ student }) => {
+  const { t } = useTranslation();
   const [tests, setTests] = useState<Test[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [viewingTest, setViewingTest] = useState<Test | null>(null);
@@ -45,15 +47,15 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ student }) => {
         setTests(updatedTests);
         
         toast({
-          title: "Test Sent",
-          description: `Test successfully sent to ${student.email}`,
+          title: t('students.testSent'),
+          description: t('students.testSentSuccess', { email: student.email }),
         });
       }
     } catch (error) {
       console.error("Error sending test:", error);
       toast({
-        title: "Failed to Send Test",
-        description: "There was an error sending the test. Please try again.",
+        title: t('students.testSendFailed'),
+        description: t('students.testSendError'),
         variant: "destructive",
       });
     }
@@ -72,7 +74,7 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ student }) => {
               </div>
             </div>
             <Badge className="capitalize">
-              Level {student.level}
+              {t('students.level')} {student.level}
             </Badge>
           </div>
         </CardHeader>
@@ -84,11 +86,11 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ student }) => {
             </div>
             <div className="flex items-center">
               <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
-              <span>{student.hoursPerWeek} hour{student.hoursPerWeek !== 1 ? 's' : ''}/week</span>
+              <span>{student.hoursPerWeek} {student.hoursPerWeek !== 1 ? t('students.hoursPerWeek') : t('students.hourPerWeek')}</span>
             </div>
             <div className="flex items-center">
               <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-              <span>Started {new Date(student.startDate).toLocaleDateString()}</span>
+              <span>{t('students.started')} {new Date(student.startDate).toLocaleDateString()}</span>
             </div>
           </div>
         </CardContent>
@@ -100,7 +102,7 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ student }) => {
             className="mb-4 w-full" 
             onClick={() => setIsGenerating(!isGenerating)}
           >
-            {isGenerating ? 'Hide Generator' : 'Generate Test'}
+            {isGenerating ? t('students.hideGenerator') : t('students.generateTest')}
           </Button>
           
           {isGenerating && (
@@ -123,7 +125,7 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ student }) => {
           <DialogHeader>
             <DialogTitle>{viewingTest?.title}</DialogTitle>
             <DialogDescription>
-              Created {viewingTest && new Date(viewingTest.createdAt).toLocaleString()}
+              {t('students.created')} {viewingTest && new Date(viewingTest.createdAt).toLocaleString()}
             </DialogDescription>
           </DialogHeader>
           <div className="font-mono text-sm whitespace-pre-wrap bg-secondary/50 p-4 rounded-md max-h-[60vh] overflow-auto">

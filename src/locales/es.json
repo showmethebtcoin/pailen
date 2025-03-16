@@ -78,7 +78,8 @@
     "enterDetails": "Introduce los detalles de tu nuevo estudiante aquí",
     "fullName": "Nombre completo",
     "email": "Correo electrónico",
-    "hoursPerWeek": "Horas por semana",
+    "hoursPerWeek": "horas por semana",
+    "hourPerWeek": "hora por semana",
     "missing": "Faltan campos",
     "fillRequired": "Por favor, completa todos los campos requeridos",
     "studentAdded": "Estudiante añadido",
@@ -90,7 +91,16 @@
     "exportCSV": "Exportar CSV",
     "backToList": "Volver a la lista de estudiantes",
     "exportData": "Exportar datos",
-    "viewDetails": "Ver detalles"
+    "viewDetails": "Ver detalles",
+    "studentSince": "Estudiante desde",
+    "started": "Comenzó",
+    "generateTest": "Generar prueba",
+    "hideGenerator": "Ocultar generador",
+    "testSent": "Prueba enviada",
+    "testSentSuccess": "Prueba enviada con éxito a {{email}}",
+    "testSendFailed": "Error al enviar la prueba",
+    "testSendError": "Hubo un error al enviar la prueba. Por favor, inténtalo de nuevo.",
+    "created": "Creado"
   },
   "subscription": {
     "title": "Planes de suscripción",

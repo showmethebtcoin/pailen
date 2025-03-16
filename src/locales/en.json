@@ -78,7 +78,8 @@
     "enterDetails": "Enter the details of your new student here.",
     "fullName": "Full Name",
     "email": "Email",
-    "hoursPerWeek": "Hours Per Week",
+    "hoursPerWeek": "hours per week",
+    "hourPerWeek": "hour per week",
     "missing": "Missing fields",
     "fillRequired": "Please fill out all required fields",
     "studentAdded": "Student added",
@@ -90,7 +91,16 @@
     "exportCSV": "Export CSV",
     "backToList": "Back to Students List",
     "exportData": "Export Data",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "studentSince": "Student since",
+    "started": "Started",
+    "generateTest": "Generate Test",
+    "hideGenerator": "Hide Generator",
+    "testSent": "Test Sent",
+    "testSentSuccess": "Test successfully sent to {{email}}",
+    "testSendFailed": "Failed to Send Test",
+    "testSendError": "There was an error sending the test. Please try again.",
+    "created": "Created"
   },
   "subscription": {
     "title": "Subscription Plans",

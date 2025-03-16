@@ -1,4 +1,5 @@
 
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Mail } from 'lucide-react';
@@ -37,6 +38,8 @@ const getLanguageColor = (language: string) => {
 };
 
 const StudentCard = ({ student }: StudentCardProps) => {
+  const { t } = useTranslation();
+  
   return (
     <Card className="overflow-hidden transition-all duration-300 hover:shadow-md">
       <CardHeader className="pb-2">
@@ -61,11 +64,11 @@ const StudentCard = ({ student }: StudentCardProps) => {
       <CardContent className="pb-3">
         <div className="flex items-center text-sm text-muted-foreground">
           <Clock className="h-3.5 w-3.5 mr-1.5 opacity-70" />
-          <span>{student.hoursPerWeek} hours/week</span>
+          <span>{student.hoursPerWeek} {t('students.hoursPerWeek').split(' ')[0]}</span>
         </div>
       </CardContent>
       <CardFooter className="pt-0 pb-4">
-        <div className="text-xs text-muted-foreground">Student since {student.startDate}</div>
+        <div className="text-xs text-muted-foreground">{t('students.studentSince')} {student.startDate}</div>
       </CardFooter>
     </Card>
   );
