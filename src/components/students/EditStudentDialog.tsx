@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Student } from '@/types/student';
 import { Button } from '@/components/ui/button';
@@ -28,9 +28,10 @@ import { useToast } from '@/hooks/use-toast';
 interface EditStudentDialogProps {
   student: Student;
   onEditStudent: (studentId: string, updatedStudent: Partial<Student>) => void;
+  children?: ReactNode; // Add children prop to accept the button as a child
 }
 
-const EditStudentDialog = ({ student, onEditStudent }: EditStudentDialogProps) => {
+const EditStudentDialog = ({ student, onEditStudent, children }: EditStudentDialogProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
@@ -72,10 +73,12 @@ const EditStudentDialog = ({ student, onEditStudent }: EditStudentDialogProps) =
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-          <Edit className="h-4 w-4" />
-          <span className="sr-only">{t('students.edit')}</span>
-        </Button>
+        {children || (
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+            <Edit className="h-4 w-4" />
+            <span className="sr-only">Editar</span>
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
