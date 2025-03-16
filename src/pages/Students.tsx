@@ -28,12 +28,24 @@ const Students = () => {
 
   useEffect(() => {
     const fetchStudents = async () => {
-      setStudents(mockStudents);
-      setFilteredStudents(mockStudents);
+      try {
+        console.log("Fetching students data...");
+        // Utilizamos los datos mockeados
+        setStudents(mockStudents);
+        setFilteredStudents(mockStudents);
+        console.log("Students loaded:", mockStudents.length);
+      } catch (error) {
+        console.error("Error fetching students:", error);
+        toast({
+          title: "Error",
+          description: "No se pudieron cargar los estudiantes",
+          variant: "destructive"
+        });
+      }
     };
     
     fetchStudents();
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     let result = students;
@@ -56,17 +68,22 @@ const Students = () => {
     }
     
     setFilteredStudents(result);
+    console.log("Filtered students:", result.length);
   }, [searchQuery, languageFilter, levelFilter, students]);
 
   const handleAddStudent = (student: Student) => {
-    setStudents([student, ...students]);
+    setStudents(prevStudents => [student, ...prevStudents]);
+    toast({
+      title: t('students.studentAdded'),
+      description: `${student.name} ${t('students.hasBeenAdded')}`,
+    });
   };
 
   const handleDeleteStudent = (studentId: string) => {
     const student = students.find(s => s.id === studentId);
     if (!student) return;
     
-    setStudents(students.filter(s => s.id !== studentId));
+    setStudents(prevStudents => prevStudents.filter(s => s.id !== studentId));
     
     toast({
       title: t('students.studentRemoved'),

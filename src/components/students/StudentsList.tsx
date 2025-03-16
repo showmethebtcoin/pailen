@@ -18,6 +18,8 @@ const StudentsList = ({
   onDeleteStudent 
 }: StudentsListProps) => {
   const { t } = useTranslation();
+  
+  console.log("StudentsList rendering with", students.length, "students");
 
   return (
     <>
@@ -30,16 +32,16 @@ const StudentsList = ({
       </h2>
       
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {students.map((student) => (
-          <StudentCardItem 
-            key={student.id} 
-            student={student} 
-            onViewStudent={onViewStudent}
-            onDeleteStudent={onDeleteStudent}
-          />
-        ))}
-        
-        {students.length === 0 && (
+        {students.length > 0 ? (
+          students.map((student) => (
+            <StudentCardItem 
+              key={student.id} 
+              student={student} 
+              onViewStudent={onViewStudent}
+              onDeleteStudent={onDeleteStudent}
+            />
+          ))
+        ) : (
           <EmptyStudentState hasFilters={hasFilters} />
         )}
       </div>
