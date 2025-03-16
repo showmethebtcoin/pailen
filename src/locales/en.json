@@ -1,0 +1,188 @@
+
+{
+  "common": {
+    "welcome": "Welcome",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "name": "Full Name",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "signUp": "Sign Up",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "manage": "Manage"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "students": "Students",
+    "schedule": "Schedule",
+    "analytics": "Analytics",
+    "subscription": "Subscription",
+    "settings": "Settings",
+    "admin": "Admin"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "totalStudents": "Total Students",
+    "activeStudents": "Active students in your roster",
+    "weeklyHours": "Weekly Hours",
+    "teachingHoursPerWeek": "Total teaching hours per week",
+    "languages": "Languages",
+    "differentLanguages": "Different languages you teach",
+    "upcomingClasses": "Upcoming Classes",
+    "classesScheduled": "Classes scheduled this week",
+    "recentStudents": "Recent Students",
+    "recentlyAddedStudents": "Your most recently added students",
+    "languagesDistribution": "Languages Distribution",
+    "languagesDistributionDesc": "Distribution of languages across your students",
+    "studentLevels": "Student Levels",
+    "studentLevelsDesc": "Distribution of proficiency levels among your students",
+    "count": "Count",
+    "level": "Level"
+  },
+  "students": {
+    "title": "Students",
+    "manage": "Manage and view your language students",
+    "filter": "Filter Students",
+    "filterDesc": "Narrow down your student list using the filters below",
+    "searchPlaceholder": "Search by name or email...",
+    "language": "Language",
+    "level": "Level",
+    "allLanguages": "All Languages",
+    "allLevels": "All Levels",
+    "found": "Found",
+    "total": "Total",
+    "noStudentsFound": "No students found",
+    "adjustSearch": "Try adjusting your search or filter criteria",
+    "addFirstStudent": "Add your first student to get started",
+    "addStudent": "Add Student",
+    "newStudent": "Add New Student",
+    "enterDetails": "Enter the details of your new student here.",
+    "fullName": "Full Name",
+    "email": "Email",
+    "hoursPerWeek": "Hours Per Week",
+    "missing": "Missing fields",
+    "fillRequired": "Please fill out all required fields",
+    "studentAdded": "Student added",
+    "hasBeenAdded": "has been added to your students list",
+    "studentRemoved": "Student removed",
+    "hasBeenRemoved": "has been removed from your students list",
+    "exportSuccess": "Export Successful",
+    "studentsExported": "students have been exported to CSV",
+    "exportCSV": "Export CSV",
+    "backToList": "Back to Students List",
+    "exportData": "Export Data",
+    "viewDetails": "View Details"
+  },
+  "subscription": {
+    "title": "Subscription Plans",
+    "current": "Current Subscription",
+    "details": "Your subscription details",
+    "plan": "Plan",
+    "status": "Status",
+    "renewsOn": "Renews On",
+    "trialEnds": "Trial Ends",
+    "manage": "Manage Subscription",
+    "errorCreating": "Failed to create checkout session. Please try again.",
+    "errorManaging": "Failed to access subscription management. Please try again.",
+    "basic": "Basic",
+    "premium": "Premium",
+    "pro": "Professional",
+    "free": "Free Trial",
+    "monthly": "monthly",
+    "yearly": "yearly",
+    "currentPlan": "Your current plan",
+    "upgrade": "Upgrade",
+    "subscribe": "Subscribe",
+    "current": "Current",
+    "features": "Features",
+    "limitedStudents": "Up to {{count}} students",
+    "unlimitedStudents": "Unlimited students",
+    "basicAnalytics": "Basic analytics",
+    "advancedAnalytics": "Advanced analytics",
+    "emailSupport": "Email support",
+    "prioritySupport": "Priority support",
+    "aiGeneration": "AI generation ({{count}} per month)",
+    "unlimitedAI": "Unlimited AI generation"
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "accessDenied": "Access Denied",
+    "noPermission": "You do not have permission to access the admin panel."
+  },
+  "landing": {
+    "hero": {
+      "tagline": "Language Teaching Simplified",
+      "title": "The Perfect Platform for Language Teachers",
+      "description": "Manage your students, track progress, and organize your teaching schedule all in one elegant, intuitive platform.",
+      "getStarted": "Get Started for Free",
+      "signIn": "Sign In"
+    },
+    "features": {
+      "title": "Everything You Need to Succeed",
+      "description": "Our platform is designed specifically for language teachers, with all the tools you need to manage your teaching business.",
+      "studentManagement": {
+        "title": "Student Management",
+        "description": "Keep track of all your students, their language levels, progress, and contact information in one place."
+      },
+      "scheduling": {
+        "title": "Scheduling & Calendar",
+        "description": "Organize your teaching schedule, set reminders, and manage bookings with an intuitive calendar interface."
+      },
+      "progress": {
+        "title": "Progress Tracking",
+        "description": "Monitor student progress and performance with detailed analytics and customizable reports."
+      }
+    },
+    "cta": {
+      "title": "Ready to transform your teaching experience?",
+      "description": "Join thousands of language teachers who are simplifying their workflow and focusing on what matters most: teaching.",
+      "action": "Get Started Today"
+    },
+    "footer": {
+      "slogan": "The ultimate platform for language teachers",
+      "product": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "company": "Company",
+      "about": "About",
+      "blog": "Blog",
+      "contact": "Contact",
+      "legal": "Legal",
+      "privacy": "Privacy",
+      "terms": "Terms",
+      "cookies": "Cookie Policy",
+      "rights": "All rights reserved"
+    }
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "signInAccess": "Sign in to access your teaching portal",
+    "createAccount": "Create an account",
+    "startManaging": "Start managing your language students",
+    "signingIn": "Signing in...",
+    "creatingAccount": "Creating account..."
+  },
+  "language": {
+    "switchTo": "Switch to Español"
+  }
+}

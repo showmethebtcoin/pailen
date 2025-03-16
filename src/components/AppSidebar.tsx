@@ -21,6 +21,7 @@ import {
   CreditCard,
   ShieldCheck
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/AuthContext';
@@ -31,6 +32,7 @@ const AppSidebar = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const [activePath, setActivePath] = useState<string>(location.pathname);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setActivePath(location.pathname);
@@ -41,34 +43,34 @@ const AppSidebar = () => {
 
   const menuItems = [
     {
-      title: 'Dashboard',
+      title: t('navigation.dashboard'),
       icon: Home,
       path: '/dashboard',
     },
     {
-      title: 'Students',
+      title: t('navigation.students'),
       icon: Users,
       path: '/students',
     },
     {
-      title: 'Schedule',
+      title: t('navigation.schedule'),
       icon: Calendar,
       path: '/schedule',
     },
     {
-      title: 'Analytics',
+      title: t('navigation.analytics'),
       icon: BarChart,
       path: '/analytics',
     },
     {
-      title: 'Subscription',
+      title: t('navigation.subscription'),
       icon: CreditCard,
       path: '/subscription',
-      badge: user?.subscription?.status === 'trialing' ? 'Trial' : undefined,
+      badge: user?.subscription?.status === 'trialing' ? t('subscription.free') : undefined,
       badgeVariant: 'secondary' as const, // Fixed: explicitly typed as a const to match Badge variant types
     },
     {
-      title: 'Settings',
+      title: t('navigation.settings'),
       icon: Settings,
       path: '/settings',
     },
@@ -77,7 +79,7 @@ const AppSidebar = () => {
   // Add admin menu item for admin users
   if (isAdmin) {
     menuItems.push({
-      title: 'Admin',
+      title: t('navigation.admin'),
       icon: ShieldCheck,
       path: '/admin',
     });
@@ -102,7 +104,7 @@ const AppSidebar = () => {
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium text-sm">{user?.name || 'User'}</p>
+              <p className="font-medium text-sm">{user?.name || t('common.welcome')}</p>
               <p className="text-xs text-muted-foreground">{user?.email || 'user@example.com'}</p>
             </div>
           </div>
@@ -141,7 +143,7 @@ const AppSidebar = () => {
           onClick={logout}
         >
           <LogOut className="h-4 w-4" />
-          <span>Logout</span>
+          <span>{t('common.logout')}</span>
         </Button>
       </SidebarFooter>
     </Sidebar>

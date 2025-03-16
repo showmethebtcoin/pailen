@@ -1,0 +1,188 @@
+
+{
+  "common": {
+    "welcome": "Bienvenido",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "name": "Nombre completo",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "signIn": "Iniciar sesión",
+    "createAccount": "Crear cuenta",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "dontHaveAccount": "¿No tienes una cuenta?",
+    "signUp": "Registrarse",
+    "error": "Error",
+    "success": "Éxito",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "export": "Exportar",
+    "add": "Añadir",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "view": "Ver",
+    "manage": "Gestionar"
+  },
+  "navigation": {
+    "dashboard": "Panel de control",
+    "students": "Estudiantes",
+    "schedule": "Horario",
+    "analytics": "Análisis",
+    "subscription": "Suscripción",
+    "settings": "Configuración",
+    "admin": "Administración"
+  },
+  "dashboard": {
+    "title": "Panel de control",
+    "welcome": "Bienvenido de nuevo",
+    "totalStudents": "Total de estudiantes",
+    "activeStudents": "Estudiantes activos en tu lista",
+    "weeklyHours": "Horas semanales",
+    "teachingHoursPerWeek": "Total de horas de enseñanza por semana",
+    "languages": "Idiomas",
+    "differentLanguages": "Diferentes idiomas que enseñas",
+    "upcomingClasses": "Próximas clases",
+    "classesScheduled": "Clases programadas esta semana",
+    "recentStudents": "Estudiantes recientes",
+    "recentlyAddedStudents": "Tus estudiantes añadidos recientemente",
+    "languagesDistribution": "Distribución de idiomas",
+    "languagesDistributionDesc": "Distribución de idiomas entre tus estudiantes",
+    "studentLevels": "Niveles de estudiantes",
+    "studentLevelsDesc": "Distribución de niveles de competencia entre tus estudiantes",
+    "count": "Cantidad",
+    "level": "Nivel"
+  },
+  "students": {
+    "title": "Estudiantes",
+    "manage": "Gestiona y visualiza tus estudiantes de idiomas",
+    "filter": "Filtrar estudiantes",
+    "filterDesc": "Reduce tu lista de estudiantes usando los filtros de abajo",
+    "searchPlaceholder": "Buscar por nombre o correo...",
+    "language": "Idioma",
+    "level": "Nivel",
+    "allLanguages": "Todos los idiomas",
+    "allLevels": "Todos los niveles",
+    "found": "Encontrados",
+    "total": "Total",
+    "noStudentsFound": "No se encontraron estudiantes",
+    "adjustSearch": "Intenta ajustar tus criterios de búsqueda o filtros",
+    "addFirstStudent": "Añade tu primer estudiante para comenzar",
+    "addStudent": "Añadir estudiante",
+    "newStudent": "Nuevo estudiante",
+    "enterDetails": "Introduce los detalles de tu nuevo estudiante aquí",
+    "fullName": "Nombre completo",
+    "email": "Correo electrónico",
+    "hoursPerWeek": "Horas por semana",
+    "missing": "Faltan campos",
+    "fillRequired": "Por favor, completa todos los campos requeridos",
+    "studentAdded": "Estudiante añadido",
+    "hasBeenAdded": "ha sido añadido a tu lista de estudiantes",
+    "studentRemoved": "Estudiante eliminado",
+    "hasBeenRemoved": "ha sido eliminado de tu lista de estudiantes",
+    "exportSuccess": "Exportación exitosa",
+    "studentsExported": "estudiantes han sido exportados a CSV",
+    "exportCSV": "Exportar CSV",
+    "backToList": "Volver a la lista de estudiantes",
+    "exportData": "Exportar datos",
+    "viewDetails": "Ver detalles"
+  },
+  "subscription": {
+    "title": "Planes de suscripción",
+    "current": "Suscripción actual",
+    "details": "Detalles de tu suscripción",
+    "plan": "Plan",
+    "status": "Estado",
+    "renewsOn": "Se renueva el",
+    "trialEnds": "La prueba termina el",
+    "manage": "Gestionar suscripción",
+    "errorCreating": "Error al crear la sesión de pago. Por favor, inténtalo de nuevo.",
+    "errorManaging": "Error al acceder a la gestión de suscripción. Por favor, inténtalo de nuevo.",
+    "basic": "Básico",
+    "premium": "Premium",
+    "pro": "Profesional",
+    "free": "Prueba gratuita",
+    "monthly": "mensual",
+    "yearly": "anual",
+    "currentPlan": "Tu plan actual",
+    "upgrade": "Mejorar",
+    "subscribe": "Suscribirse",
+    "current": "Actual",
+    "features": "Características",
+    "limitedStudents": "Hasta {{count}} estudiantes",
+    "unlimitedStudents": "Estudiantes ilimitados",
+    "basicAnalytics": "Análisis básicos",
+    "advancedAnalytics": "Análisis avanzados",
+    "emailSupport": "Soporte por correo",
+    "prioritySupport": "Soporte prioritario",
+    "aiGeneration": "Generación con IA ({{count}} por mes)",
+    "unlimitedAI": "Generación ilimitada con IA"
+  },
+  "admin": {
+    "title": "Panel de administración",
+    "accessDenied": "Acceso denegado",
+    "noPermission": "No tienes permiso para acceder al panel de administración."
+  },
+  "landing": {
+    "hero": {
+      "tagline": "Enseñanza de idiomas simplificada",
+      "title": "La plataforma perfecta para profesores de idiomas",
+      "description": "Gestiona tus estudiantes, haz seguimiento del progreso y organiza tu horario de enseñanza en una plataforma elegante e intuitiva.",
+      "getStarted": "Comenzar gratis",
+      "signIn": "Iniciar sesión"
+    },
+    "features": {
+      "title": "Todo lo que necesitas para tener éxito",
+      "description": "Nuestra plataforma está diseñada específicamente para profesores de idiomas, con todas las herramientas que necesitas para gestionar tu negocio de enseñanza.",
+      "studentManagement": {
+        "title": "Gestión de estudiantes",
+        "description": "Mantén un registro de todos tus estudiantes, sus niveles de idioma, progreso e información de contacto en un solo lugar."
+      },
+      "scheduling": {
+        "title": "Horarios y calendario",
+        "description": "Organiza tu horario de enseñanza, configura recordatorios y gestiona reservas con una interfaz de calendario intuitiva."
+      },
+      "progress": {
+        "title": "Seguimiento de progreso",
+        "description": "Monitoriza el progreso y rendimiento de los estudiantes con análisis detallados e informes personalizables."
+      }
+    },
+    "cta": {
+      "title": "¿Listo para transformar tu experiencia de enseñanza?",
+      "description": "Únete a miles de profesores de idiomas que están simplificando su flujo de trabajo y centrándose en lo más importante: enseñar.",
+      "action": "Comienza hoy"
+    },
+    "footer": {
+      "slogan": "La plataforma definitiva para profesores de idiomas",
+      "product": "Producto",
+      "features": "Características",
+      "pricing": "Precios",
+      "faq": "FAQ",
+      "company": "Empresa",
+      "about": "Acerca de",
+      "blog": "Blog",
+      "contact": "Contacto",
+      "legal": "Legal",
+      "privacy": "Privacidad",
+      "terms": "Términos",
+      "cookies": "Política de cookies",
+      "rights": "Todos los derechos reservados"
+    }
+  },
+  "auth": {
+    "welcomeBack": "Bienvenido de nuevo",
+    "signInAccess": "Inicia sesión para acceder a tu portal de enseñanza",
+    "createAccount": "Crear una cuenta",
+    "startManaging": "Comienza a gestionar tus estudiantes de idiomas",
+    "signingIn": "Iniciando sesión...",
+    "creatingAccount": "Creando cuenta..."
+  },
+  "language": {
+    "switchTo": "Cambiar a English"
+  }
+}
