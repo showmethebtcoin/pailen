@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Test } from '@/types/student';
-import { Loader2, Send, Download, Copy, FileSparkles } from 'lucide-react';
+import { Loader2, Send, Download, Copy, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface TestActionsProps {
@@ -42,7 +42,7 @@ const TestActions: React.FC<TestActionsProps> = ({
           </>
         ) : (
           <>
-            <FileSparkles className="mr-2 h-4 w-4" />
+            <Sparkles className="mr-2 h-4 w-4" />
             Generate Test
           </>
         )}
