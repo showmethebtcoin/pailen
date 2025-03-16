@@ -21,6 +21,10 @@ const StudentsList = ({
   
   console.log("StudentsList rendering with", students.length, "students");
 
+  if (!students || students.length === 0) {
+    return <EmptyStudentState hasFilters={hasFilters} />;
+  }
+
   return (
     <>
       <h2 className="text-xl font-semibold mb-4">
@@ -32,18 +36,14 @@ const StudentsList = ({
       </h2>
       
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {students.length > 0 ? (
-          students.map((student) => (
-            <StudentCardItem 
-              key={student.id} 
-              student={student} 
-              onViewStudent={onViewStudent}
-              onDeleteStudent={onDeleteStudent}
-            />
-          ))
-        ) : (
-          <EmptyStudentState hasFilters={hasFilters} />
-        )}
+        {students.map((student) => (
+          <StudentCardItem 
+            key={student.id} 
+            student={student} 
+            onViewStudent={onViewStudent}
+            onDeleteStudent={onDeleteStudent}
+          />
+        ))}
       </div>
     </>
   );

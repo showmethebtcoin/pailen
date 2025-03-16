@@ -31,9 +31,11 @@ const Students = () => {
       try {
         console.log("Fetching students data...");
         // Utilizamos los datos mockeados
-        setStudents(mockStudents);
-        setFilteredStudents(mockStudents);
-        console.log("Students loaded:", mockStudents.length);
+        const data = [...mockStudents];
+        console.log("Mock students data:", data);
+        setStudents(data);
+        setFilteredStudents(data);
+        console.log("Students loaded:", data.length);
       } catch (error) {
         console.error("Error fetching students:", error);
         toast({
@@ -48,7 +50,8 @@ const Students = () => {
   }, [toast]);
 
   useEffect(() => {
-    let result = students;
+    let result = [...students];
+    console.log("Filtering students from:", students.length);
     
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
@@ -67,8 +70,8 @@ const Students = () => {
       result = result.filter(student => student.level === levelFilter);
     }
     
+    console.log("Filtered students result:", result.length);
     setFilteredStudents(result);
-    console.log("Filtered students:", result.length);
   }, [searchQuery, languageFilter, levelFilter, students]);
 
   const handleAddStudent = (student: Student) => {
