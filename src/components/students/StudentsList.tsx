@@ -9,6 +9,7 @@ interface StudentsListProps {
   hasFilters: boolean;
   onViewStudent: (student: Student) => void;
   onDeleteStudent: (studentId: string) => void;
+  onEditStudent: (studentId: string, updatedStudent: Partial<Student>) => void;
   onAddStudent?: (student: Student) => void;
 }
 
@@ -17,6 +18,7 @@ const StudentsList = ({
   hasFilters,
   onViewStudent, 
   onDeleteStudent,
+  onEditStudent,
   onAddStudent
 }: StudentsListProps) => {
   const { t } = useTranslation();
@@ -44,6 +46,7 @@ const StudentsList = ({
             student={student} 
             onViewStudent={onViewStudent}
             onDeleteStudent={onDeleteStudent}
+            onEditStudent={onEditStudent}
           />
         ))}
       </div>

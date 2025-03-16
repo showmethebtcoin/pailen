@@ -16,6 +16,9 @@ import StudentsList from '@/components/students/StudentsList';
 import StudentsHeader from '@/components/students/StudentsHeader';
 import StudentDetailView from '@/components/students/StudentDetailView';
 
+// Clave para almacenar estudiantes en localStorage
+const STORAGE_KEY = 'language_app_students';
+
 const Students = () => {
   const { t } = useTranslation();
   const [students, setStudents] = useState<Student[]>([]);
@@ -26,13 +29,28 @@ const Students = () => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const { toast } = useToast();
 
+  // Cargar estudiantes desde localStorage o usar datos de ejemplo
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         console.log("Fetching students data...");
-        // Utilizamos los datos mockeados
-        const data = [...mockStudents];
-        console.log("Mock students data:", data);
+        
+        // Intentar cargar desde localStorage
+        const storedStudents = localStorage.getItem(STORAGE_KEY);
+        let data: Student[] = [];
+        
+        if (storedStudents) {
+          console.log("Loading students from localStorage");
+          data = JSON.parse(storedStudents);
+        } else {
+          // Si no hay datos en localStorage, usar los datos de ejemplo
+          console.log("No students in localStorage, using mock data");
+          data = [...mockStudents];
+          // Guardar datos de ejemplo en localStorage
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+        
+        console.log("Students data:", data);
         setStudents(data);
         setFilteredStudents(data);
         console.log("Students loaded:", data.length);
@@ -49,6 +67,7 @@ const Students = () => {
     fetchStudents();
   }, [toast]);
 
+  // Filtrar estudiantes basado en las búsquedas y filtros
   useEffect(() => {
     let result = [...students];
     console.log("Filtering students from:", students.length);
@@ -74,11 +93,41 @@ const Students = () => {
     setFilteredStudents(result);
   }, [searchQuery, languageFilter, levelFilter, students]);
 
+  // Función para guardar estudiantes en localStorage
+  const saveStudentsToStorage = (updatedStudents: Student[]) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedStudents));
+    console.log("Saved students to localStorage:", updatedStudents.length);
+  };
+
   const handleAddStudent = (student: Student) => {
-    setStudents(prevStudents => [student, ...prevStudents]);
+    const updatedStudents = [student, ...students];
+    setStudents(updatedStudents);
+    saveStudentsToStorage(updatedStudents);
+    
     toast({
       title: t('students.studentAdded'),
       description: `${student.name} ${t('students.hasBeenAdded')}`,
+    });
+  };
+
+  const handleEditStudent = (studentId: string, updatedStudentData: Partial<Student>) => {
+    const updatedStudents = students.map(student => 
+      student.id === studentId 
+        ? { ...student, ...updatedStudentData } 
+        : student
+    );
+    
+    setStudents(updatedStudents);
+    saveStudentsToStorage(updatedStudents);
+    
+    // Si el estudiante que se está editando es el seleccionado, actualizar también
+    if (selectedStudent && selectedStudent.id === studentId) {
+      setSelectedStudent({ ...selectedStudent, ...updatedStudentData });
+    }
+    
+    toast({
+      title: t('students.studentUpdated'),
+      description: `${updatedStudentData.name || 'Estudiante'} ${t('students.hasBeenUpdated')}`,
     });
   };
 
@@ -86,7 +135,14 @@ const Students = () => {
     const student = students.find(s => s.id === studentId);
     if (!student) return;
     
-    setStudents(prevStudents => prevStudents.filter(s => s.id !== studentId));
+    const updatedStudents = students.filter(s => s.id !== studentId);
+    setStudents(updatedStudents);
+    saveStudentsToStorage(updatedStudents);
+    
+    // Si el estudiante eliminado es el seleccionado, volver a la lista
+    if (selectedStudent && selectedStudent.id === studentId) {
+      setSelectedStudent(null);
+    }
     
     toast({
       title: t('students.studentRemoved'),
@@ -154,6 +210,7 @@ const Students = () => {
             <StudentDetailView 
               student={selectedStudent} 
               onBack={() => setSelectedStudent(null)} 
+              onEditStudent={handleEditStudent}
             />
           ) : (
             <StudentsList
@@ -161,6 +218,8 @@ const Students = () => {
               hasFilters={!!(searchQuery || languageFilter || levelFilter)}
               onViewStudent={handleViewStudent}
               onDeleteStudent={handleDeleteStudent}
+              onEditStudent={handleEditStudent}
+              onAddStudent={handleAddStudent}
             />
           )}
         </motion.div>

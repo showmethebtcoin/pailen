@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Edit, Download, Trash2, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import StudentCard from '@/components/StudentCard';
+import EditStudentDialog from './EditStudentDialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,9 +18,15 @@ interface StudentCardItemProps {
   student: Student;
   onViewStudent: (student: Student) => void;
   onDeleteStudent: (studentId: string) => void;
+  onEditStudent: (studentId: string, updatedStudent: Partial<Student>) => void;
 }
 
-const StudentCardItem = ({ student, onViewStudent, onDeleteStudent }: StudentCardItemProps) => {
+const StudentCardItem = ({ 
+  student, 
+  onViewStudent, 
+  onDeleteStudent,
+  onEditStudent 
+}: StudentCardItemProps) => {
   const { t } = useTranslation();
 
   return (
@@ -37,6 +44,10 @@ const StudentCardItem = ({ student, onViewStudent, onDeleteStudent }: StudentCar
               <DropdownMenuItem onClick={() => onViewStudent(student)}>
                 <Edit className="mr-2 h-4 w-4" />
                 <span>{t('students.viewDetails')}</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <EditStudentDialog student={student} onEditStudent={onEditStudent} />
+                <span>{t('students.edit')}</span>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Download className="mr-2 h-4 w-4" />
