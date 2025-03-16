@@ -10,6 +10,9 @@ interface DashboardStats {
   totalHours: number;
 }
 
+// Clave para almacenar estudiantes en localStorage (misma que en Students.tsx)
+const STORAGE_KEY = 'language_app_students';
+
 export const useDashboardData = () => {
   const [students, setStudents] = useState<Student[]>([]);
   const [stats, setStats] = useState<DashboardStats>({
@@ -20,17 +23,33 @@ export const useDashboardData = () => {
   });
 
   useEffect(() => {
-    // Fetch students data (mock for now)
+    // Fetch students data from localStorage
     const fetchStudents = async () => {
-      // In a real app, this would be an API call
-      setStudents(mockStudents);
+      console.log("Dashboard: Fetching students data...");
+      
+      // Intentar cargar desde localStorage
+      const storedStudents = localStorage.getItem(STORAGE_KEY);
+      let studentsData: Student[] = [];
+      
+      if (storedStudents) {
+        console.log("Dashboard: Loading students from localStorage");
+        studentsData = JSON.parse(storedStudents);
+      } else {
+        // Si no hay datos en localStorage, usar los datos de ejemplo
+        console.log("Dashboard: No students in localStorage, using mock data");
+        studentsData = [...mockStudents];
+        // Guardar datos de ejemplo en localStorage
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(studentsData));
+      }
+      
+      setStudents(studentsData);
       
       // Calculate stats
       const languagesCount: Record<string, number> = {};
       const levelsCount: Record<string, number> = {};
       let totalHours = 0;
       
-      mockStudents.forEach(student => {
+      studentsData.forEach(student => {
         // Count languages
         languagesCount[student.language] = (languagesCount[student.language] || 0) + 1;
         
@@ -42,10 +61,16 @@ export const useDashboardData = () => {
       });
       
       setStats({
-        totalStudents: mockStudents.length,
+        totalStudents: studentsData.length,
         languagesCount,
         levelsCount,
         totalHours,
+      });
+      
+      console.log("Dashboard: Stats calculated:", {
+        totalStudents: studentsData.length,
+        totalHours,
+        languagesCount: Object.keys(languagesCount).length
       });
     };
     
