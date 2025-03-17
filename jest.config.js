@@ -9,4 +9,15 @@ module.exports = {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testMatch: ['**/?(*.)+(spec|test).(ts|tsx)'],
+  globals: {
+    'ts-jest': {
+      isolatedModules: true,
+      tsconfig: {
+        jsx: 'react-jsx',
+        esModuleInterop: true,
+        strict: true,
+      }
+    }
+  }
 };
