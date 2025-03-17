@@ -1,7 +1,7 @@
 
 import { useTranslation } from 'react-i18next';
 import PageTransition from '@/components/PageTransition';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
 import { useDashboardData } from '@/hooks/useDashboardData';
 

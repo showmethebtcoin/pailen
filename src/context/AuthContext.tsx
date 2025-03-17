@@ -1,29 +1,13 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+
+import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-import { UserSubscription } from '@/types/student';
 import { getUserSubscription } from '@/utils/stripe';
 import { logActivity, LogLevel } from '@/utils/logger';
 import { authService } from '@/services/api';
-
-// Types
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  subscription?: UserSubscription;
-}
-
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
-  logout: () => void;
-  isAuthenticated: boolean;
-  refreshSubscription: () => Promise<void>;
-  isSubscriptionActive: boolean;
-}
+import { User, AuthContextType } from '@/types/auth';
+import { useAuth } from '@/hooks/useAuth';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 // Default context value
 const defaultContextValue: AuthContextType = {
@@ -38,10 +22,13 @@ const defaultContextValue: AuthContextType = {
 };
 
 // Create the context
-const AuthContext = createContext<AuthContextType>(defaultContextValue);
+export const AuthContext = createContext<AuthContextType>(defaultContextValue);
 
-// Custom hook to use the auth context
-export const useAuth = () => useContext(AuthContext);
+// Re-export the useAuth hook for convenience
+export { useAuth } from '@/hooks/useAuth';
+
+// Re-export the ProtectedRoute component
+export { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 // Provider component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -228,43 +215,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
-
-// Protected route component
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
-
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isAuthenticated, loading, isSubscriptionActive, user } = useAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
-
-  useEffect(() => {
-    if (!loading) {
-      if (!isAuthenticated) {
-        navigate('/login');
-      } else if (!isSubscriptionActive && !location.pathname.includes('/subscription')) {
-        // Redirect to subscription page if the user doesn't have an active subscription
-        toast({
-          title: "Subscription Required",
-          description: user?.subscription?.status === 'trialing' 
-            ? "Your trial period has ended. Please subscribe to continue."
-            : "Please subscribe to access this feature.",
-          variant: "destructive",
-        });
-        navigate('/subscription');
-      }
-    }
-  }, [isAuthenticated, isSubscriptionActive, loading, navigate, user]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  return isAuthenticated ? <>{children}</> : null;
 };

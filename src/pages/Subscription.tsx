@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import PageTransition from '@/components/PageTransition';
 import { createCheckoutSession, createPortalSession, SUBSCRIPTION_PLANS } from '@/utils/stripe';
 import SubscriptionPlanCard from '@/components/SubscriptionPlanCard';

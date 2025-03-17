@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import PageTransition from '@/components/PageTransition';
 import AdminDashboard from '@/components/AdminDashboard';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
