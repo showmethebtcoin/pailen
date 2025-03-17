@@ -58,60 +58,6 @@ const StudentsContainer = () => {
     setSelectedStudent(student);
   };
 
-  const onAddStudent = async (student: Student) => {
-    const result = await handleAddStudent(student);
-    
-    if (result.success) {
-      toast({
-        title: t('students.studentAdded'),
-        description: `${student.name} ${t('students.hasBeenAdded')}`,
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "No se pudo añadir el estudiante",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const onEditStudent = async (studentId: string, updatedStudentData: Partial<Student>) => {
-    const result = await handleEditStudent(studentId, updatedStudentData);
-    
-    if (result.success) {
-      toast({
-        title: t('students.studentUpdated'),
-        description: `${updatedStudentData.name || 'Estudiante'} ${t('students.hasBeenUpdated')}`,
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "No se pudo actualizar el estudiante",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const onDeleteStudent = async (studentId: string) => {
-    const student = filteredStudents.find(s => s.id === studentId);
-    if (!student) return;
-    
-    const result = await handleDeleteStudent(studentId);
-    
-    if (result.success) {
-      toast({
-        title: t('students.studentRemoved'),
-        description: `${student.name} ${t('students.hasBeenRemoved')}`,
-      });
-    } else {
-      toast({
-        title: "Error",
-        description: "No se pudo eliminar el estudiante",
-        variant: "destructive"
-      });
-    }
-  };
-
   return (
     <motion.div
       variants={container}
@@ -122,7 +68,7 @@ const StudentsContainer = () => {
       <motion.div variants={item}>
         <StudentsHeader 
           onExportStudents={handleExportStudents} 
-          onAddStudent={onAddStudent}
+          onAddStudent={handleAddStudent}
           filteredStudentsCount={filteredStudents.length}
         />
       </motion.div>
@@ -147,16 +93,16 @@ const StudentsContainer = () => {
           <StudentDetailView 
             student={selectedStudent} 
             onBack={() => setSelectedStudent(null)} 
-            onEditStudent={onEditStudent}
+            onEditStudent={handleEditStudent}
           />
         ) : (
           <StudentsList
             students={filteredStudents}
             hasFilters={!!(searchQuery || languageFilter || levelFilter)}
             onViewStudent={handleViewStudent}
-            onDeleteStudent={onDeleteStudent}
-            onEditStudent={onEditStudent}
-            onAddStudent={onAddStudent}
+            onDeleteStudent={handleDeleteStudent}
+            onEditStudent={handleEditStudent}
+            onAddStudent={handleAddStudent}
           />
         )}
       </motion.div>

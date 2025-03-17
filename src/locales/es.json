@@ -193,6 +193,7 @@
     "creatingAccount": "Creando cuenta..."
   },
   "language": {
-    "switchTo": "Cambiar a English"
+    "switchTo": "Cambiar a English",
+    "current": "Español"
   }
 }

@@ -1,51 +1,47 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Student } from '@/types/student';
 import { useToast } from '@/hooks/use-toast';
 import { studentService } from '@/services/api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 export const useStudents = () => {
-  const [students, setStudents] = useState<Student[]>([]);
-  const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [languageFilter, setLanguageFilter] = useState('');
   const [levelFilter, setLevelFilter] = useState('');
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation();
+  const queryClient = useQueryClient();
 
-  // Load students from API
-  useEffect(() => {
-    const fetchStudents = async () => {
+  // Consulta de estudiantes con React Query
+  const { data: students = [], isLoading: loading } = useQuery({
+    queryKey: ['students'],
+    queryFn: async () => {
+      console.log("Fetching students data from API...");
       try {
-        setLoading(true);
-        console.log("Fetching students data from API...");
-        
         const data = await studentService.getAll();
-        
         console.log("Students data from API:", data);
-        setStudents(data);
-        setFilteredStudents(data);
-        console.log("Students loaded:", data.length);
+        return data;
       } catch (error) {
         console.error("Error fetching students:", error);
-        toast({
-          title: "Error",
-          description: "No se pudieron cargar los estudiantes",
-          variant: "destructive"
-        });
-      } finally {
-        setLoading(false);
+        throw error;
       }
-    };
-    
-    fetchStudents();
-  }, [toast]);
+    },
+    onError: (error) => {
+      console.error("Error in students query:", error);
+      toast({
+        title: t('common.error'),
+        description: t('students.loadError'),
+        variant: "destructive"
+      });
+    }
+  });
 
-  // Filter students based on search and filters
-  useEffect(() => {
+  // Filtrado de estudiantes
+  const filteredStudents = useCallback(() => {
     let result = [...students];
-    console.log("Filtering students from:", students.length);
     
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
@@ -64,77 +60,123 @@ export const useStudents = () => {
       result = result.filter(student => student.level === levelFilter);
     }
     
-    console.log("Filtered students result:", result.length);
-    setFilteredStudents(result);
-  }, [searchQuery, languageFilter, levelFilter, students]);
+    return result;
+  }, [students, searchQuery, languageFilter, levelFilter]);
+
+  // Mutaciones para crear, actualizar y eliminar estudiantes
+  const addStudentMutation = useMutation({
+    mutationFn: async (student: Student) => {
+      // Remove client-generated ID
+      const { id, ...studentData } = student;
+      return await studentService.create(studentData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['students']});
+    }
+  });
+
+  const editStudentMutation = useMutation({
+    mutationFn: async ({studentId, updatedStudentData}: {studentId: string, updatedStudentData: Partial<Student>}) => {
+      return await studentService.update(studentId, updatedStudentData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['students']});
+    }
+  });
+
+  const deleteStudentMutation = useMutation({
+    mutationFn: async (studentId: string) => {
+      return await studentService.delete(studentId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['students']});
+    }
+  });
 
   const handleAddStudent = async (student: Student) => {
     try {
-      // Remove client-generated ID
-      const { id, ...studentData } = student;
+      await addStudentMutation.mutateAsync(student);
       
-      // Create student in backend
-      const newStudent = await studentService.create(studentData);
+      toast({
+        title: t('students.studentAdded'),
+        description: `${student.name} ${t('students.hasBeenAdded')}`,
+      });
       
-      // Update local state
-      setStudents(prevStudents => [newStudent, ...prevStudents]);
-      
-      return { success: true, student: newStudent };
+      return { success: true };
     } catch (error) {
       console.error("Error adding student:", error);
+      
+      toast({
+        title: t('common.error'),
+        description: t('students.addError'),
+        variant: "destructive"
+      });
+      
       return { success: false, error };
     }
   };
 
   const handleEditStudent = async (studentId: string, updatedStudentData: Partial<Student>) => {
     try {
-      // Update student in backend
-      const updatedStudent = await studentService.update(studentId, updatedStudentData);
-      
-      // Update local state
-      setStudents(prevStudents => 
-        prevStudents.map(student => 
-          student.id === studentId 
-            ? { ...student, ...updatedStudent } 
-            : student
-        )
-      );
+      await editStudentMutation.mutateAsync({studentId, updatedStudentData});
       
       // Also update selected student if it's the one being edited
       if (selectedStudent && selectedStudent.id === studentId) {
-        setSelectedStudent({ ...selectedStudent, ...updatedStudent });
+        const updatedStudent = {...selectedStudent, ...updatedStudentData};
+        setSelectedStudent(updatedStudent);
       }
       
-      return { success: true, student: updatedStudent };
+      toast({
+        title: t('students.studentUpdated'),
+        description: `${updatedStudentData.name || ''} ${t('students.hasBeenUpdated')}`,
+      });
+      
+      return { success: true };
     } catch (error) {
       console.error("Error updating student:", error);
+      
+      toast({
+        title: t('common.error'),
+        description: t('students.updateError'),
+        variant: "destructive"
+      });
+      
       return { success: false, error };
     }
   };
 
   const handleDeleteStudent = async (studentId: string) => {
     try {
-      // Delete student in backend
-      await studentService.delete(studentId);
-      
-      // Update local state
-      setStudents(prevStudents => prevStudents.filter(s => s.id !== studentId));
+      await deleteStudentMutation.mutateAsync(studentId);
       
       // If deleted student is selected, go back to list
       if (selectedStudent && selectedStudent.id === studentId) {
         setSelectedStudent(null);
       }
       
+      const deletedStudent = students.find(s => s.id === studentId);
+      
+      toast({
+        title: t('students.studentRemoved'),
+        description: `${deletedStudent?.name || ''} ${t('students.hasBeenRemoved')}`,
+      });
+      
       return { success: true };
     } catch (error) {
       console.error("Error deleting student:", error);
+      
+      toast({
+        title: t('common.error'),
+        description: t('students.deleteError'),
+        variant: "destructive"
+      });
+      
       return { success: false, error };
     }
   };
 
   return {
-    students,
-    filteredStudents,
+    filteredStudents: filteredStudents(),
     searchQuery,
     setSearchQuery,
     languageFilter, 
