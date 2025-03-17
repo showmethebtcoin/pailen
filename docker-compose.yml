@@ -1,0 +1,61 @@
+
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: language_app_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - DATABASE_URL=postgres://${DB_USER:-postgres}:${DB_PASS:-postgres}@db:5432/${DB_NAME:-language_app}
+      - JWT_SECRET=${JWT_SECRET:-your_jwt_secret_key_here}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-your_openai_api_key}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY:-your_sendgrid_api_key}
+      - EMAIL_FROM=${EMAIL_FROM:-your_email@example.com}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-your_stripe_secret_key}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-your_stripe_webhook_secret}
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - db
+    networks:
+      - language_app_network
+
+  frontend:
+    build: .
+    container_name: language_app_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - language_app_network
+
+  db:
+    image: postgres:14-alpine
+    container_name: language_app_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASS:-postgres}
+      - POSTGRES_DB=${DB_NAME:-language_app}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - language_app_network
+
+networks:
+  language_app_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
