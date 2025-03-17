@@ -27,6 +27,23 @@ const User = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    role: {
+      type: DataTypes.ENUM('user', 'admin'),
+      defaultValue: 'user',
+    },
+    stripeCustomerId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    subscription: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: {
+        status: 'none',
+        planId: 'basic',
+        currentPeriodEnd: null
+      }
+    },
   },
   {
     timestamps: true,
