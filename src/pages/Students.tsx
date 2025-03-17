@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { FileDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Student } from '@/types/student';
-import { mockStudents } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
 import { downloadCSV } from '@/utils/export';
 import PageTransition from '@/components/PageTransition';
@@ -15,9 +14,7 @@ import StudentFilters from '@/components/students/StudentFilters';
 import StudentsList from '@/components/students/StudentsList';
 import StudentsHeader from '@/components/students/StudentsHeader';
 import StudentDetailView from '@/components/students/StudentDetailView';
-
-// Clave para almacenar estudiantes en localStorage
-const STORAGE_KEY = 'language_app_students';
+import { studentService } from '@/services/api';
 
 const Students = () => {
   const { t } = useTranslation();
@@ -28,29 +25,18 @@ const Students = () => {
   const [levelFilter, setLevelFilter] = useState('');
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
 
-  // Cargar estudiantes desde localStorage o usar datos de ejemplo
+  // Cargar estudiantes desde la API
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        console.log("Fetching students data...");
+        setLoading(true);
+        console.log("Fetching students data from API...");
         
-        // Intentar cargar desde localStorage
-        const storedStudents = localStorage.getItem(STORAGE_KEY);
-        let data: Student[] = [];
+        const data = await studentService.getAll();
         
-        if (storedStudents) {
-          console.log("Loading students from localStorage");
-          data = JSON.parse(storedStudents);
-        } else {
-          // Si no hay datos en localStorage, usar los datos de ejemplo
-          console.log("No students in localStorage, using mock data");
-          data = [...mockStudents];
-          // Guardar datos de ejemplo en localStorage
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-        }
-        
-        console.log("Students data:", data);
+        console.log("Students data from API:", data);
         setStudents(data);
         setFilteredStudents(data);
         console.log("Students loaded:", data.length);
@@ -61,6 +47,8 @@ const Students = () => {
           description: "No se pudieron cargar los estudiantes",
           variant: "destructive"
         });
+      } finally {
+        setLoading(false);
       }
     };
     
@@ -93,61 +81,92 @@ const Students = () => {
     setFilteredStudents(result);
   }, [searchQuery, languageFilter, levelFilter, students]);
 
-  // Función para guardar estudiantes en localStorage
-  const saveStudentsToStorage = (updatedStudents: Student[]) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedStudents));
-    console.log("Saved students to localStorage:", updatedStudents.length);
-  };
-
-  const handleAddStudent = (student: Student) => {
-    const updatedStudents = [student, ...students];
-    setStudents(updatedStudents);
-    saveStudentsToStorage(updatedStudents);
-    
-    toast({
-      title: t('students.studentAdded'),
-      description: `${student.name} ${t('students.hasBeenAdded')}`,
-    });
-  };
-
-  const handleEditStudent = (studentId: string, updatedStudentData: Partial<Student>) => {
-    const updatedStudents = students.map(student => 
-      student.id === studentId 
-        ? { ...student, ...updatedStudentData } 
-        : student
-    );
-    
-    setStudents(updatedStudents);
-    saveStudentsToStorage(updatedStudents);
-    
-    // Si el estudiante que se está editando es el seleccionado, actualizar también
-    if (selectedStudent && selectedStudent.id === studentId) {
-      setSelectedStudent({ ...selectedStudent, ...updatedStudentData });
+  const handleAddStudent = async (student: Student) => {
+    try {
+      // Eliminar el ID generado en el cliente
+      const { id, ...studentData } = student;
+      
+      // Crear el estudiante en el backend
+      const newStudent = await studentService.create(studentData);
+      
+      // Actualizar el estado local
+      setStudents(prevStudents => [newStudent, ...prevStudents]);
+      
+      toast({
+        title: t('students.studentAdded'),
+        description: `${student.name} ${t('students.hasBeenAdded')}`,
+      });
+    } catch (error) {
+      console.error("Error adding student:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo añadir el estudiante",
+        variant: "destructive"
+      });
     }
-    
-    toast({
-      title: t('students.studentUpdated'),
-      description: `${updatedStudentData.name || 'Estudiante'} ${t('students.hasBeenUpdated')}`,
-    });
   };
 
-  const handleDeleteStudent = (studentId: string) => {
-    const student = students.find(s => s.id === studentId);
-    if (!student) return;
-    
-    const updatedStudents = students.filter(s => s.id !== studentId);
-    setStudents(updatedStudents);
-    saveStudentsToStorage(updatedStudents);
-    
-    // Si el estudiante eliminado es el seleccionado, volver a la lista
-    if (selectedStudent && selectedStudent.id === studentId) {
-      setSelectedStudent(null);
+  const handleEditStudent = async (studentId: string, updatedStudentData: Partial<Student>) => {
+    try {
+      // Actualizar el estudiante en el backend
+      const updatedStudent = await studentService.update(studentId, updatedStudentData);
+      
+      // Actualizar el estado local
+      setStudents(prevStudents => 
+        prevStudents.map(student => 
+          student.id === studentId 
+            ? { ...student, ...updatedStudent } 
+            : student
+        )
+      );
+      
+      // Si el estudiante que se está editando es el seleccionado, actualizar también
+      if (selectedStudent && selectedStudent.id === studentId) {
+        setSelectedStudent({ ...selectedStudent, ...updatedStudent });
+      }
+      
+      toast({
+        title: t('students.studentUpdated'),
+        description: `${updatedStudentData.name || 'Estudiante'} ${t('students.hasBeenUpdated')}`,
+      });
+    } catch (error) {
+      console.error("Error updating student:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo actualizar el estudiante",
+        variant: "destructive"
+      });
     }
-    
-    toast({
-      title: t('students.studentRemoved'),
-      description: `${student.name} ${t('students.hasBeenRemoved')}`,
-    });
+  };
+
+  const handleDeleteStudent = async (studentId: string) => {
+    try {
+      const student = students.find(s => s.id === studentId);
+      if (!student) return;
+      
+      // Eliminar el estudiante en el backend
+      await studentService.delete(studentId);
+      
+      // Actualizar el estado local
+      setStudents(prevStudents => prevStudents.filter(s => s.id !== studentId));
+      
+      // Si el estudiante eliminado es el seleccionado, volver a la lista
+      if (selectedStudent && selectedStudent.id === studentId) {
+        setSelectedStudent(null);
+      }
+      
+      toast({
+        title: t('students.studentRemoved'),
+        description: `${student.name} ${t('students.hasBeenRemoved')}`,
+      });
+    } catch (error) {
+      console.error("Error deleting student:", error);
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar el estudiante",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleExportStudents = () => {
@@ -206,7 +225,11 @@ const Students = () => {
         </motion.div>
 
         <motion.div variants={item}>
-          {selectedStudent ? (
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+          ) : selectedStudent ? (
             <StudentDetailView 
               student={selectedStudent} 
               onBack={() => setSelectedStudent(null)} 

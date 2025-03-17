@@ -1,10 +1,10 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { UserSubscription } from '@/types/student';
 import { getUserSubscription } from '@/utils/stripe';
 import { logActivity, LogLevel } from '@/utils/logger';
+import { authService } from '@/services/api';
 
 // Types
 interface User {
@@ -42,39 +42,6 @@ const AuthContext = createContext<AuthContextType>(defaultContextValue);
 
 // Custom hook to use the auth context
 export const useAuth = () => useContext(AuthContext);
-
-// Mock API functions (to be replaced with real API calls)
-const mockLogin = async (email: string, password: string): Promise<User> => {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // For demo purposes, accept any login with valid format
-  if (!email.includes('@') || password.length < 6) {
-    throw new Error('Invalid credentials');
-  }
-  
-  return {
-    id: '1',
-    email,
-    name: email.split('@')[0],
-  };
-};
-
-const mockRegister = async (email: string, password: string, name: string): Promise<User> => {
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // For demo purposes, accept any registration with valid format
-  if (!email.includes('@') || password.length < 6) {
-    throw new Error('Invalid registration details');
-  }
-  
-  return {
-    id: '1',
-    email,
-    name,
-  };
-};
 
 // Provider component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -139,7 +106,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string) => {
     try {
       setLoading(true);
-      const userData = await mockLogin(email, password);
+      
+      // Llamar al servicio de login
+      const response = await authService.login(email, password);
+      const userData = response.user;
+      const token = response.token;
       
       try {
         // Fetch subscription data
@@ -151,7 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       // Store user and token
       localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('token', 'mock-jwt-token'); // This would be a real JWT in production
+      localStorage.setItem('token', token);
       
       setUser(userData);
       
@@ -168,7 +139,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Login error:', error);
       toast({
         title: "Login failed",
-        description: error instanceof Error ? error.message : "Unable to log in",
+        description: "Credenciales inválidas o error del servidor",
         variant: "destructive",
       });
       throw error;
@@ -181,7 +152,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (email: string, password: string, name: string) => {
     try {
       setLoading(true);
-      const userData = await mockRegister(email, password, name);
+      
+      // Llamar al servicio de registro
+      const response = await authService.register(email, password, name);
+      const userData = response.user;
+      const token = response.token;
       
       // For demo purposes, create a trial subscription
       userData.subscription = {
@@ -195,7 +170,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       // Store user and token
       localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('token', 'mock-jwt-token'); // This would be a real JWT in production
+      localStorage.setItem('token', token);
       
       setUser(userData);
       
@@ -212,7 +187,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Registration error:', error);
       toast({
         title: "Registration failed",
-        description: error instanceof Error ? error.message : "Unable to register",
+        description: "Error al registrar el usuario",
         variant: "destructive",
       });
       throw error;
