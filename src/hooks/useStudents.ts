@@ -29,13 +29,15 @@ export const useStudents = () => {
         throw error;
       }
     },
-    onError: (error) => {
-      console.error("Error in students query:", error);
-      toast({
-        title: t('common.error'),
-        description: t('students.loadError'),
-        variant: "destructive"
-      });
+    meta: {
+      onError: (error: Error) => {
+        console.error("Error in students query:", error);
+        toast({
+          title: t('common.error'),
+          description: t('students.loadError'),
+          variant: "destructive"
+        });
+      }
     }
   });
 
