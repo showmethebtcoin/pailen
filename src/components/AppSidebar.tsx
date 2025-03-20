@@ -19,7 +19,8 @@ import {
   LogOut,
   BarChart,
   CreditCard,
-  ShieldCheck
+  ShieldCheck,
+  BookOpen
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Logo from './Logo';
@@ -53,6 +54,11 @@ const AppSidebar = () => {
       path: '/students',
     },
     {
+      title: t('navigation.lessonTopics'),
+      icon: BookOpen,
+      path: '/lesson-topics',
+    },
+    {
       title: t('navigation.schedule'),
       icon: Calendar,
       path: '/schedule',
@@ -67,7 +73,7 @@ const AppSidebar = () => {
       icon: CreditCard,
       path: '/subscription',
       badge: user?.subscription?.status === 'trialing' ? t('subscription.free') : undefined,
-      badgeVariant: 'secondary' as const, // Fixed: explicitly typed as a const to match Badge variant types
+      badgeVariant: 'secondary' as const,
     },
     {
       title: t('navigation.settings'),

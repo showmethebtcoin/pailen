@@ -20,6 +20,7 @@ import Cookies from '@/pages/Cookies';
 import NotFound from '@/pages/NotFound';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
+import LessonTopics from '@/pages/LessonTopics';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/students" element={<Students />} />
+            <Route path="/lesson-topics" element={<LessonTopics />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/subscription" element={<Subscription />} />
           </Route>

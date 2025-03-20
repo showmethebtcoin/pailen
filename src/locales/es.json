@@ -35,7 +35,8 @@
     "analytics": "Análisis",
     "subscription": "Suscripción",
     "settings": "Configuración",
-    "admin": "Administración"
+    "admin": "Administración",
+    "lessonTopics": "Temas de Clase"
   },
   "dashboard": {
     "title": "Panel de control",
@@ -99,7 +100,9 @@
     "testSentSuccess": "Prueba enviada con éxito a {{email}}",
     "testSendFailed": "Error al enviar la prueba",
     "testSendError": "Hubo un error al enviar la prueba. Por favor, inténtalo de nuevo.",
-    "created": "Creado"
+    "created": "Creado",
+    "lessonTopics": "Temas de Clase",
+    "lessonTopicsDescription": "Gestiona los temas de las próximas clases para todos los estudiantes en un solo lugar"
   },
   "subscription": {
     "title": "Planes de suscripción",

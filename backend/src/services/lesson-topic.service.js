@@ -1,5 +1,7 @@
 
 const Student = require('../models/Student');
+const User = require('../models/User');
+const { Op } = require('sequelize');
 const { sendLessonTopicEmail } = require('./email.service');
 
 // Actualizar el tema de la próxima clase para un estudiante

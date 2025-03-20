@@ -35,7 +35,8 @@
     "analytics": "Analytics",
     "subscription": "Subscription",
     "settings": "Settings",
-    "admin": "Admin"
+    "admin": "Admin",
+    "lessonTopics": "Lesson Topics"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -99,7 +100,9 @@
     "testSentSuccess": "Test successfully sent to {{email}}",
     "testSendFailed": "Failed to Send Test",
     "testSendError": "There was an error sending the test. Please try again.",
-    "created": "Created"
+    "created": "Created",
+    "lessonTopics": "Lesson Topics",
+    "lessonTopicsDescription": "Manage upcoming lesson topics for all students in one place"
   },
   "subscription": {
     "title": "Subscription Plans",
