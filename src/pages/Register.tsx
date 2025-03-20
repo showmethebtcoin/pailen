@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import GlassCard from '@/components/GlassCard';
 import Logo from '@/components/Logo';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -18,12 +19,13 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { register } = useAuth();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError(t('auth.passwordsDontMatch'));
       return;
     }
     
@@ -58,8 +60,8 @@ const Register = () => {
             className="text-center mb-8"
           >
             <Logo size="lg" className="mb-4" />
-            <h1 className="text-3xl font-semibold mb-2">Create an account</h1>
-            <p className="text-muted-foreground">Start managing your language students</p>
+            <h1 className="text-3xl font-semibold mb-2">{t('auth.createAccount')}</h1>
+            <p className="text-muted-foreground">{t('auth.startManaging')}</p>
           </motion.div>
 
           <motion.div
@@ -70,11 +72,11 @@ const Register = () => {
             <GlassCard className="p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name">{t('auth.fullName')}</Label>
                   <Input
                     id="name"
                     type="text"
-                    placeholder="John Smith"
+                    placeholder={t('auth.namePlaceholder')}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -82,11 +84,11 @@ const Register = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('common.email')}</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="teacher@example.com"
+                    placeholder={t('auth.emailPlaceholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -94,11 +96,11 @@ const Register = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{t('auth.password')}</Label>
                   <Input
                     id="password"
                     type="password"
-                    placeholder="••••••••"
+                    placeholder={t('auth.passwordPlaceholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -106,11 +108,11 @@ const Register = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
                   <Input
                     id="confirmPassword"
                     type="password"
-                    placeholder="••••••••"
+                    placeholder={t('auth.passwordPlaceholder')}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
@@ -124,10 +126,10 @@ const Register = () => {
                   {isLoading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2" />
-                      Creating account...
+                      {t('auth.creatingAccount')}
                     </div>
                   ) : (
-                    'Create Account'
+                    t('auth.register')
                   )}
                 </Button>
               </form>
@@ -141,9 +143,9 @@ const Register = () => {
             className="text-center mt-6"
           >
             <p className="text-sm text-muted-foreground">
-              Already have an account?{' '}
+              {t('auth.alreadyHaveAccount')}{' '}
               <Link to="/login" className="text-primary hover:underline">
-                Sign in
+                {t('auth.login')}
               </Link>
             </p>
           </motion.div>

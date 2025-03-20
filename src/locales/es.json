@@ -1,10 +1,10 @@
-
 {
   "common": {
     "dashboard": "Panel de Control",
     "students": "Estudiantes",
     "settings": "Configuración",
-    "welcome": "Bienvenido",
+    "welcome": "Bienvenido a {{app}}",
+    "startBuilding": "¡Comienza a construir tu increíble proyecto aquí!",
     "loading": "Cargando...",
     "save": "Guardar",
     "cancel": "Cancelar",
@@ -29,7 +29,72 @@
     "date": "Fecha",
     "time": "Hora",
     "description": "Descripción",
-    "details": "Detalles"
+    "details": "Detalles",
+    "menu": "Menú"
+  },
+  "language": {
+    "current": "Idioma"
+  },
+  "landing": {
+    "hero": {
+      "title": "La Plataforma Definitiva para Profesores de Idiomas",
+      "subtitle": "Simplifica tu proceso de enseñanza, mejora la participación de los estudiantes y concéntrate en lo más importante: enseñar.",
+      "getStarted": "Comenzar Gratis",
+      "learnMore": "Saber Más",
+      "signin": "Iniciar Sesión", 
+      "signIn": "Iniciar Sesión",
+      "tagline": "Para profesores de idiomas",
+      "description": "Simplifica tu proceso de enseñanza, mejora la participación de los estudiantes y concéntrate en lo más importante: enseñar."
+    },
+    "features": {
+      "title": "Potentes Funciones para Profesores de Idiomas",
+      "subtitle": "Todo lo que necesitas para gestionar eficientemente tu negocio de enseñanza",
+      "description": "Todo lo que necesitas para gestionar eficientemente tu negocio de enseñanza",
+      "studentManagement": {
+        "title": "Gestión de Estudiantes",
+        "description": "Mantén un seguimiento de todos tus estudiantes, su progreso y personaliza su camino de aprendizaje."
+      },
+      "testGeneration": {
+        "title": "Generación de Exámenes",
+        "description": "Crea exámenes de idiomas personalizados con asistencia de IA basados en el nivel y necesidades del estudiante."
+      },
+      "scheduling": {
+        "title": "Programación Inteligente",
+        "description": "Organiza tus clases y envía recordatorios automáticos para evitar citas perdidas."
+      },
+      "analytics": {
+        "title": "Análisis de Rendimiento",
+        "description": "Obtén información sobre el progreso de los estudiantes e identifica áreas que necesitan más atención."
+      },
+      "progress": {
+        "title": "Seguimiento de Progreso",
+        "description": "Monitoriza el desarrollo del estudiante y adapta tu estrategia de enseñanza para obtener mejores resultados."
+      }
+    },
+    "cta": {
+      "title": "¿Listo para transformar tu experiencia de enseñanza?",
+      "subtitle": "Únete a miles de profesores de idiomas que han mejorado su proceso de enseñanza con nuestra plataforma.",
+      "button": "Comienza tu Prueba Gratuita",
+      "description": "Únete a miles de profesores de idiomas que han mejorado su proceso de enseñanza con nuestra plataforma.",
+      "action": "Comienza tu Prueba Gratuita"
+    },
+    "footer": {
+      "product": "Producto",
+      "features": "Características",
+      "pricing": "Precios",
+      "faq": "Preguntas Frecuentes",
+      "company": "Empresa",
+      "about": "Acerca de Nosotros",
+      "contact": "Contáctanos",
+      "careers": "Carreras",
+      "legal": "Legal",
+      "terms": "Términos de Servicio",
+      "privacy": "Política de Privacidad",
+      "cookies": "Política de Cookies",
+      "copyright": "© 2023 Pailen. Todos los derechos reservados.",
+      "slogan": "Haciendo la enseñanza de idiomas más efectiva",
+      "rights": "Todos los derechos reservados"
+    }
   },
   "auth": {
     "login": "Iniciar sesión",
@@ -50,7 +115,39 @@
     "registerError": "Error al registrarse",
     "resetError": "Error al restablecer la contraseña",
     "passwordResetRequestSuccess": "Solicitud de restablecimiento de contraseña enviada",
-    "invalidResetToken": "Token de restablecimiento inválido o caducado"
+    "invalidResetToken": "Token de restablecimiento inválido o caducado",
+    "emailPlaceholder": "profesor@ejemplo.com",
+    "passwordPlaceholder": "••••••••",
+    "fullName": "Nombre Completo",
+    "namePlaceholder": "Juan Pérez",
+    "createAccount": "Crear una cuenta",
+    "startManaging": "Comienza a gestionar tus estudiantes de idiomas",
+    "creatingAccount": "Creando cuenta...",
+    "signingIn": "Iniciando sesión...",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "dontHaveAccount": "¿No tienes una cuenta?",
+    "signUp": "Regístrate",
+    "welcomeBack": "Bienvenido de nuevo",
+    "accessPortal": "Inicia sesión para acceder a tu portal de enseñanza",
+    "forgotPasswordText": "¿Olvidaste tu contraseña?",
+    "recoverPassword": "Recupera tu contraseña",
+    "checkEmail": "Revisa tu correo electrónico para obtener instrucciones",
+    "sendInstructions": "Te enviaremos un enlace para restablecer tu contraseña",
+    "emailSent": "Email Enviado",
+    "receiveForgotInstructions": "Si existe una cuenta con este email, recibirás instrucciones para restablecer tu contraseña.",
+    "returnToLogin": "Volver al inicio de sesión",
+    "rememberPassword": "¿Recuerdas tu contraseña?",
+    "sending": "Enviando...",
+    "sendResetInstructions": "Enviar instrucciones",
+    "newPasswordTitle": "Nueva contraseña",
+    "setNewPassword": "Establece una nueva contraseña para tu cuenta",
+    "updating": "Actualizando...",
+    "passwordUpdated": "¡Contraseña actualizada!",
+    "passwordSuccessUpdate": "Tu contraseña ha sido actualizada correctamente. Serás redirigido al inicio de sesión.",
+    "goToLogin": "Ir al inicio de sesión",
+    "requestNewLink": "Solicitar nuevo enlace",
+    "error": "Error",
+    "resetPassword": "Restablecer contraseña"
   },
   "dashboard": {
     "totalStudents": "Total de Estudiantes",

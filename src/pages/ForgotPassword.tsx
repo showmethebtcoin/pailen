@@ -10,12 +10,14 @@ import Logo from '@/components/Logo';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { authService } from '@/services/api';
+import { useTranslation } from 'react-i18next';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,14 +29,14 @@ const ForgotPassword = () => {
       
       setSubmitted(true);
       toast({
-        title: "Email Enviado",
-        description: "Si existe una cuenta con este email, recibirás instrucciones para restablecer tu contraseña.",
+        title: t('auth.emailSent'),
+        description: t('auth.receiveForgotInstructions'),
       });
     } catch (error) {
       console.error("Error al solicitar recuperación:", error);
       toast({
-        title: "Error",
-        description: "No pudimos procesar tu solicitud. Inténtalo de nuevo más tarde.",
+        title: t('auth.error'),
+        description: t('auth.resetError'),
         variant: "destructive",
       });
     } finally {
@@ -61,11 +63,11 @@ const ForgotPassword = () => {
             className="text-center mb-8"
           >
             <Logo size="lg" className="mb-4" />
-            <h1 className="text-3xl font-semibold mb-2">Recupera tu contraseña</h1>
+            <h1 className="text-3xl font-semibold mb-2">{t('auth.recoverPassword')}</h1>
             <p className="text-muted-foreground">
               {submitted 
-                ? "Revisa tu correo electrónico para obtener instrucciones" 
-                : "Te enviaremos un enlace para restablecer tu contraseña"}
+                ? t('auth.checkEmail')
+                : t('auth.sendInstructions')}
             </p>
           </motion.div>
 
@@ -78,23 +80,22 @@ const ForgotPassword = () => {
               {submitted ? (
                 <div className="text-center py-4">
                   <div className="text-primary text-5xl mb-4">✓</div>
-                  <h2 className="text-xl font-medium mb-2">Email Enviado</h2>
+                  <h2 className="text-xl font-medium mb-2">{t('auth.emailSent')}</h2>
                   <p className="text-muted-foreground mb-4">
-                    Si existe una cuenta con el email <strong>{email}</strong>, recibirás instrucciones
-                    para restablecer tu contraseña.
+                    {t('auth.receiveForgotInstructions')}
                   </p>
                   <Button asChild className="mt-2">
-                    <Link to="/login">Volver al inicio de sesión</Link>
+                    <Link to="/login">{t('auth.returnToLogin')}</Link>
                   </Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">{t('common.email')}</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="teacher@example.com"
+                      placeholder={t('auth.emailPlaceholder')}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
@@ -105,10 +106,10 @@ const ForgotPassword = () => {
                     {isLoading ? (
                       <div className="flex items-center">
                         <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2" />
-                        Enviando...
+                        {t('auth.sending')}
                       </div>
                     ) : (
-                      'Enviar instrucciones'
+                      t('auth.sendResetInstructions')
                     )}
                   </Button>
                 </form>
@@ -123,9 +124,9 @@ const ForgotPassword = () => {
             className="text-center mt-6"
           >
             <p className="text-sm text-muted-foreground">
-              ¿Recuerdas tu contraseña?{' '}
+              {t('auth.rememberPassword')}{' '}
               <Link to="/login" className="text-primary hover:underline">
-                Iniciar sesión
+                {t('auth.login')}
               </Link>
             </p>
           </motion.div>

@@ -10,6 +10,7 @@ import Logo from '@/components/Logo';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { authService } from '@/services/api';
+import { useTranslation } from 'react-i18next';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState('');
@@ -21,6 +22,7 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   // Extraer el token del query string
   useEffect(() => {
@@ -28,23 +30,23 @@ const ResetPassword = () => {
     const resetToken = params.get('token');
     
     if (!resetToken) {
-      setError('Token de restablecimiento no válido. Por favor, solicita un nuevo enlace de restablecimiento.');
+      setError(t('auth.invalidResetToken'));
       return;
     }
     
     setToken(resetToken);
-  }, [location.search]);
+  }, [location.search, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      setError(t('auth.passwordsDontMatch'));
       return;
     }
     
     if (!token) {
-      setError('Token no válido');
+      setError(t('auth.invalidResetToken'));
       return;
     }
     
@@ -57,8 +59,8 @@ const ResetPassword = () => {
       
       setSuccess(true);
       toast({
-        title: "Contraseña actualizada",
-        description: "Tu contraseña ha sido actualizada con éxito.",
+        title: t('auth.passwordUpdated'),
+        description: t('auth.passwordSuccessUpdate'),
       });
       
       // Redirigir al login después de 3 segundos
@@ -68,11 +70,11 @@ const ResetPassword = () => {
     } catch (error) {
       console.error("Error al restablecer contraseña:", error);
       toast({
-        title: "Error",
-        description: "No se pudo actualizar la contraseña. El enlace podría haber expirado.",
+        title: t('auth.error'),
+        description: t('auth.resetError'),
         variant: "destructive",
       });
-      setError('No se pudo restablecer la contraseña. El enlace podría haber expirado o ser inválido.');
+      setError(t('auth.invalidResetToken'));
     } finally {
       setIsLoading(false);
     }
@@ -97,8 +99,8 @@ const ResetPassword = () => {
             className="text-center mb-8"
           >
             <Logo size="lg" className="mb-4" />
-            <h1 className="text-3xl font-semibold mb-2">Nueva contraseña</h1>
-            <p className="text-muted-foreground">Establece una nueva contraseña para tu cuenta</p>
+            <h1 className="text-3xl font-semibold mb-2">{t('auth.newPasswordTitle')}</h1>
+            <p className="text-muted-foreground">{t('auth.setNewPassword')}</p>
           </motion.div>
 
           <motion.div
@@ -110,31 +112,31 @@ const ResetPassword = () => {
               {success ? (
                 <div className="text-center py-4">
                   <div className="text-primary text-5xl mb-4">✓</div>
-                  <h2 className="text-xl font-medium mb-2">¡Contraseña actualizada!</h2>
+                  <h2 className="text-xl font-medium mb-2">{t('auth.passwordUpdated')}</h2>
                   <p className="text-muted-foreground mb-4">
-                    Tu contraseña ha sido actualizada correctamente. Serás redirigido al inicio de sesión.
+                    {t('auth.passwordSuccessUpdate')}
                   </p>
                   <Button asChild className="mt-2">
-                    <Link to="/login">Ir al inicio de sesión</Link>
+                    <Link to="/login">{t('auth.goToLogin')}</Link>
                   </Button>
                 </div>
               ) : error && !token ? (
                 <div className="text-center py-4">
                   <div className="text-destructive text-5xl mb-4">✗</div>
-                  <h2 className="text-xl font-medium mb-2">Error</h2>
+                  <h2 className="text-xl font-medium mb-2">{t('auth.error')}</h2>
                   <p className="text-muted-foreground mb-4">{error}</p>
                   <Button asChild className="mt-2">
-                    <Link to="/forgot-password">Solicitar nuevo enlace</Link>
+                    <Link to="/forgot-password">{t('auth.requestNewLink')}</Link>
                   </Button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="password">Nueva contraseña</Label>
+                    <Label htmlFor="password">{t('auth.newPassword')}</Label>
                     <Input
                       id="password"
                       type="password"
-                      placeholder="••••••••"
+                      placeholder={t('auth.passwordPlaceholder')}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -142,11 +144,11 @@ const ResetPassword = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="confirmPassword">Confirmar contraseña</Label>
+                    <Label htmlFor="confirmPassword">{t('auth.confirmPassword')}</Label>
                     <Input
                       id="confirmPassword"
                       type="password"
-                      placeholder="••••••••"
+                      placeholder={t('auth.passwordPlaceholder')}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
@@ -160,10 +162,10 @@ const ResetPassword = () => {
                     {isLoading ? (
                       <div className="flex items-center">
                         <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2" />
-                        Actualizando...
+                        {t('auth.updating')}
                       </div>
                     ) : (
-                      'Restablecer contraseña'
+                      t('auth.resetPassword')
                     )}
                   </Button>
                 </form>
@@ -178,9 +180,9 @@ const ResetPassword = () => {
             className="text-center mt-6"
           >
             <p className="text-sm text-muted-foreground">
-              ¿Recuerdas tu contraseña?{' '}
+              {t('auth.rememberPassword')}{' '}
               <Link to="/login" className="text-primary hover:underline">
-                Iniciar sesión
+                {t('auth.login')}
               </Link>
             </p>
           </motion.div>

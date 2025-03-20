@@ -9,12 +9,14 @@ import { Label } from '@/components/ui/label';
 import GlassCard from '@/components/GlassCard';
 import Logo from '@/components/Logo';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,8 +49,8 @@ const Login = () => {
             className="text-center mb-8"
           >
             <Logo size="lg" className="mb-4" />
-            <h1 className="text-3xl font-semibold mb-2">Welcome back</h1>
-            <p className="text-muted-foreground">Sign in to access your teaching portal</p>
+            <h1 className="text-3xl font-semibold mb-2">{t('auth.welcomeBack')}</h1>
+            <p className="text-muted-foreground">{t('auth.accessPortal')}</p>
           </motion.div>
 
           <motion.div
@@ -59,11 +61,11 @@ const Login = () => {
             <GlassCard className="p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('common.email')}</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="teacher@example.com"
+                    placeholder={t('auth.emailPlaceholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -72,15 +74,15 @@ const Login = () => {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">{t('auth.password')}</Label>
                     <Link to="/forgot-password" className="text-xs text-primary hover:underline">
-                      Forgot password?
+                      {t('auth.forgotPasswordText')}
                     </Link>
                   </div>
                   <Input
                     id="password"
                     type="password"
-                    placeholder="••••••••"
+                    placeholder={t('auth.passwordPlaceholder')}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -91,10 +93,10 @@ const Login = () => {
                   {isLoading ? (
                     <div className="flex items-center">
                       <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2" />
-                      Signing in...
+                      {t('auth.signingIn')}
                     </div>
                   ) : (
-                    'Sign In'
+                    t('auth.login')
                   )}
                 </Button>
               </form>
@@ -108,9 +110,9 @@ const Login = () => {
             className="text-center mt-6"
           >
             <p className="text-sm text-muted-foreground">
-              Don't have an account?{' '}
+              {t('auth.dontHaveAccount')}{' '}
               <Link to="/register" className="text-primary hover:underline">
-                Sign up
+                {t('auth.signUp')}
               </Link>
             </p>
           </motion.div>
