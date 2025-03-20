@@ -18,7 +18,7 @@ const LessonTopics = () => {
 
   return (
     <AppLayout>
-      <div className="min-h-full w-full">
+      <PageTransition>
         <div className="container mx-auto py-6 space-y-6">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <div>
@@ -50,7 +50,7 @@ const LessonTopics = () => {
             <LessonTopicManager students={filteredStudents} />
           )}
         </div>
-      </div>
+      </PageTransition>
     </AppLayout>
   );
 };
