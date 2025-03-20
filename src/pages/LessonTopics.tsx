@@ -11,6 +11,7 @@ import { useStudents } from '@/hooks/useStudents';
 import LessonTopicManager from '@/components/students/LessonTopicManager';
 import PageTransition from '@/components/PageTransition';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { motion } from 'framer-motion';
 
 const LessonTopics = () => {
   const { t } = useTranslation();
@@ -18,7 +19,18 @@ const LessonTopics = () => {
 
   return (
     <AppLayout>
-      <PageTransition>
+      <motion.div
+        initial="initial"
+        animate="in"
+        exit="out"
+        variants={{
+          initial: { opacity: 0, y: 10 },
+          in: { opacity: 1, y: 0 },
+          out: { opacity: 0, y: -10 },
+        }}
+        transition={{ type: 'tween', ease: 'anticipate', duration: 0.5 }}
+        className="min-h-full w-full"
+      >
         <div className="container mx-auto py-6 space-y-6">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <div>
@@ -50,7 +62,7 @@ const LessonTopics = () => {
             <LessonTopicManager students={filteredStudents} />
           )}
         </div>
-      </PageTransition>
+      </motion.div>
     </AppLayout>
   );
 };
