@@ -159,19 +159,31 @@ const sendTest = async (req, res) => {
       return res.status(403).json({ message: 'No autorizado' });
     }
     
-    // Generar PDF del test
-    const pdfResult = await generatePDF(test.content, {
-      title: test.title,
-      studentName: test.student.name,
-      language: test.language,
-      level: test.level
-    });
+    let pdfPath = null;
     
-    // Enviar email con el PDF adjunto
-    await sendTestByEmail(test.student, test, pdfResult.path);
+    // Intentar generar PDF, pero si falla, continuamos sin él
+    try {
+      if (process.env.ENABLE_PDF_GENERATION === 'true') {
+        const pdfResult = await generatePDF(test.content, {
+          title: test.title,
+          studentName: test.student.name,
+          language: test.language,
+          level: test.level
+        });
+        pdfPath = pdfResult.path;
+      }
+    } catch (error) {
+      req.logger.warn('Error al generar PDF, continuando sin PDF:', error);
+      // Continuar sin PDF
+    }
     
-    // Eliminar el archivo temporal después de enviarlo
-    fs.unlinkSync(pdfResult.path);
+    // Enviar email (con o sin PDF adjunto)
+    await sendTestByEmail(test.student, test, pdfPath);
+    
+    // Eliminar el archivo temporal si existe
+    if (pdfPath && fs.existsSync(pdfPath)) {
+      fs.unlinkSync(pdfPath);
+    }
     
     // Actualizar estado del test
     await test.update({
@@ -220,21 +232,33 @@ const generateAndSendTest = async (req, res) => {
       status: 'draft'
     });
     
-    // Generar PDF del test
-    req.logger.info(`Generando PDF para test ID: ${test.id}`);
-    const pdfResult = await generatePDF(content, {
-      title: test.title,
-      studentName: student.name,
-      language: options.language,
-      level: options.level
-    });
+    let pdfPath = null;
     
-    // Enviar email con el PDF adjunto
+    // Intentar generar PDF, pero si falla, continuamos sin él
+    try {
+      if (process.env.ENABLE_PDF_GENERATION === 'true') {
+        req.logger.info(`Generando PDF para test ID: ${test.id}`);
+        const pdfResult = await generatePDF(content, {
+          title: test.title,
+          studentName: student.name,
+          language: options.language,
+          level: options.level
+        });
+        pdfPath = pdfResult.path;
+      }
+    } catch (error) {
+      req.logger.warn('Error al generar PDF, continuando sin PDF:', error);
+      // Continuar sin PDF
+    }
+    
+    // Enviar email (con o sin PDF adjunto)
     req.logger.info(`Enviando test a ${student.email}`);
-    await sendTestByEmail(student, test, pdfResult.path);
+    await sendTestByEmail(student, test, pdfPath);
     
-    // Eliminar el archivo temporal después de enviarlo
-    fs.unlinkSync(pdfResult.path);
+    // Eliminar el archivo temporal si existe
+    if (pdfPath && fs.existsSync(pdfPath)) {
+      fs.unlinkSync(pdfPath);
+    }
     
     // Actualizar estado del test
     await test.update({
