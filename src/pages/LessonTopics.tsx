@@ -19,14 +19,9 @@ const LessonTopics = () => {
   return (
     <AppLayout>
       <motion.div
-        initial="initial"
-        animate="in"
-        exit="out"
-        variants={{
-          initial: { opacity: 0, y: 10 },
-          in: { opacity: 1, y: 0 },
-          out: { opacity: 0, y: -10 },
-        }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
         transition={{ type: 'tween', ease: 'anticipate', duration: 0.5 }}
         className="min-h-full w-full"
       >
