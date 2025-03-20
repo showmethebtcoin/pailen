@@ -1,11 +1,66 @@
 
 import { TestGenerationOptions } from '@/types/student';
+import axios from 'axios';
 
-// This would be replaced with actual API key in a secure environment
-const MOCK_OPENAI_RESPONSE = (options: TestGenerationOptions) => {
+export const generateTest = async (options: TestGenerationOptions): Promise<string> => {
+  const { language, level, questionCount = 10, includeAnswers = true } = options;
+  
+  try {
+    // Verificar si hay una API key de OpenAI en las variables de entorno
+    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    
+    if (!apiKey) {
+      console.warn('No OpenAI API key found, using mock response');
+      return generateMockTest(options);
+    }
+    
+    console.log('Generating test with OpenAI API, options:', options);
+    
+    // Construir el prompt para OpenAI
+    const prompt = `Crea un test de idioma ${language} para estudiantes de nivel ${level}. 
+      El test debe incluir ${questionCount} preguntas.
+      Las preguntas deben ser variadas e incluir gramática, vocabulario y comprensión.
+      ${includeAnswers ? 'Incluye las respuestas correctas al final del test.' : 'No incluyas las respuestas.'}
+      Formatea el test de manera clara y profesional.`;
+    
+    // Llamar a la API de OpenAI
+    const response = await axios.post(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        model: 'gpt-4o',
+        messages: [
+          {
+            role: 'system',
+            content: 'Eres un profesor de idiomas profesional creando tests para tus estudiantes.'
+          },
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 2048
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    console.error('Error calling OpenAI API:', error);
+    console.log('Falling back to mock response');
+    return generateMockTest(options);
+  }
+};
+
+// Función para generar un test de ejemplo cuando no se puede llamar a la API
+const generateMockTest = (options: TestGenerationOptions): string => {
   const { language, level, questionCount = 10 } = options;
   
-  // This is a mock response that simulates what OpenAI would return
   const topics = language === 'English' 
     ? ['greetings', 'travel', 'food', 'hobbies', 'weather'] 
     : ['saludos', 'viajes', 'comida', 'pasatiempos', 'clima'];
@@ -35,26 +90,4 @@ const MOCK_OPENAI_RESPONSE = (options: TestGenerationOptions) => {
   }
   
   return testContent;
-};
-
-export const generateTest = async (options: TestGenerationOptions): Promise<string> => {
-  // In a real implementation, this would call the OpenAI API
-  // const response = await fetch('https://api.openai.com/v1/completions', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-  //     'Content-Type': 'application/json',
-  //   },
-  //   body: JSON.stringify({
-  //     model: 'gpt-4o',
-  //     prompt: `Create a ${options.language} language test for level ${options.level} with ${options.questionCount || 10} questions...`,
-  //     max_tokens: 1500,
-  //   }),
-  // });
-  // const data = await response.json();
-  // return data.choices[0].text;
-
-  // For demonstration purposes, return a mock response
-  console.log('Generating test with options:', options);
-  return MOCK_OPENAI_RESPONSE(options);
 };

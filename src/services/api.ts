@@ -137,5 +137,48 @@ const studentService = {
   }
 };
 
-// Exportar la instancia de API y los servicios
-export { api, authService, studentService };
+// Servicio para tests
+const testService = {
+  getAll: async () => {
+    const response = await api.get('/tests');
+    return response.data;
+  },
+  
+  getByStudent: async (studentId) => {
+    const response = await api.get(`/tests?studentId=${studentId}`);
+    return response.data;
+  },
+  
+  getById: async (id) => {
+    const response = await api.get(`/tests/${id}`);
+    return response.data;
+  },
+  
+  create: async (testData) => {
+    const response = await api.post('/tests', testData);
+    return response.data;
+  },
+  
+  generateTest: async (studentId, options) => {
+    const response = await api.post('/tests/generate', { studentId, options });
+    return response.data;
+  },
+  
+  sendTest: async (testId) => {
+    const response = await api.post('/tests/send', { testId });
+    return response.data;
+  },
+  
+  update: async (id, testData) => {
+    const response = await api.put(`/tests/${id}`, testData);
+    return response.data;
+  },
+  
+  delete: async (id) => {
+    const response = await api.delete(`/tests/${id}`);
+    return response.data;
+  }
+};
+
+// Exportar los servicios
+export { api, authService, studentService, testService };
