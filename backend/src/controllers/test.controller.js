@@ -1,36 +1,10 @@
 
-const Test = require('../models/Test');
-const Student = require('../models/Student');
-const { generateOpenAITest } = require('../services/openai.service');
-const { generatePDF } = require('../services/pdf.service');
-const { sendTestByEmail } = require('../services/email.service');
-const fs = require('fs');
-const path = require('path');
+const testService = require('../services/test.service');
 
-// Obtener todos los tests del usuario autenticado
+// Get all tests for the authenticated user
 const getAllTests = async (req, res) => {
   try {
-    // Buscar estudiantes del usuario para obtener sus IDs
-    const students = await Student.findAll({
-      where: { userId: req.user.id },
-      attributes: ['id']
-    });
-    
-    const studentIds = students.map(student => student.id);
-    
-    // Buscar tests asociados a esos estudiantes
-    const tests = await Test.findAll({
-      where: { studentId: studentIds },
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['id', 'name', 'email', 'language', 'level']
-        }
-      ],
-      order: [['createdAt', 'DESC']]
-    });
-    
+    const tests = await testService.getUserTests(req.user.id);
     res.json(tests);
   } catch (error) {
     req.logger.error('Error al obtener tests:', error);
@@ -38,162 +12,68 @@ const getAllTests = async (req, res) => {
   }
 };
 
-// Obtener un test por ID
+// Get a test by ID
 const getTestById = async (req, res) => {
   try {
     const { id } = req.params;
+    const result = await testService.getTestById(id, req.user.id);
     
-    const test = await Test.findByPk(id, {
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['id', 'name', 'email', 'language', 'level']
-        }
-      ]
-    });
-    
-    if (!test) {
-      return res.status(404).json({ message: 'Test no encontrado' });
+    if (result.error) {
+      return res.status(result.statusCode).json({ message: result.error });
     }
     
-    // Verificar que el test pertenece a un estudiante del usuario
-    const student = await Student.findByPk(test.studentId);
-    if (!student || student.userId !== req.user.id) {
-      return res.status(403).json({ message: 'No autorizado' });
-    }
-    
-    res.json(test);
+    res.json(result.test);
   } catch (error) {
     req.logger.error('Error al obtener test:', error);
     res.status(500).json({ message: 'Error en el servidor' });
   }
 };
 
-// Crear un nuevo test manualmente
+// Create a new test manually
 const createTest = async (req, res) => {
   try {
-    const { studentId, title, language, level, content } = req.body;
+    const result = await testService.createManualTest(req.body, req.user.id);
     
-    // Verificar que el estudiante pertenece al usuario
-    const student = await Student.findByPk(studentId);
-    if (!student || student.userId !== req.user.id) {
-      return res.status(403).json({ message: 'No autorizado para crear test para este estudiante' });
+    if (result.error) {
+      return res.status(result.statusCode).json({ message: result.error });
     }
     
-    const test = await Test.create({
-      studentId,
-      title,
-      language,
-      level,
-      content,
-      status: 'draft'
-    });
-    
-    res.status(201).json(test);
+    res.status(201).json(result.test);
   } catch (error) {
     req.logger.error('Error al crear test:', error);
     res.status(500).json({ message: 'Error en el servidor' });
   }
 };
 
-// Generar un test con OpenAI
+// Generate a test with OpenAI
 const generateTest = async (req, res) => {
   try {
-    const { studentId, options } = req.body;
+    const result = await testService.generateTest(req.body, req.user.id);
     
-    // Verificar que el estudiante pertenece al usuario
-    const student = await Student.findByPk(studentId);
-    if (!student || student.userId !== req.user.id) {
-      return res.status(403).json({ message: 'No autorizado para generar test para este estudiante' });
+    if (result.error) {
+      return res.status(result.statusCode).json({ message: result.error });
     }
     
-    // Añadir el nombre del estudiante a las opciones
-    const testOptions = {
-      ...options,
-      studentName: student.name
-    };
-    
-    // Generar contenido con OpenAI
-    const content = await generateOpenAITest(testOptions);
-    
-    // Crear el nuevo test
-    const test = await Test.create({
-      studentId,
-      title: `${options.language} Test - Level ${options.level}`,
-      language: options.language,
-      level: options.level,
-      content,
-      status: 'draft'
-    });
-    
-    res.status(201).json(test);
+    res.status(201).json(result.test);
   } catch (error) {
     req.logger.error('Error al generar test:', error);
     res.status(500).json({ message: 'Error en el servidor' });
   }
 };
 
-// Enviar un test por email
+// Send a test by email
 const sendTest = async (req, res) => {
   try {
     const { testId } = req.body;
+    const result = await testService.sendTest(testId, req.user.id, req.logger);
     
-    // Buscar el test
-    const test = await Test.findByPk(testId, {
-      include: [
-        {
-          model: Student,
-          as: 'student',
-          attributes: ['id', 'name', 'email', 'language', 'level', 'userId']
-        }
-      ]
-    });
-    
-    if (!test) {
-      return res.status(404).json({ message: 'Test no encontrado' });
+    if (result.error) {
+      return res.status(result.statusCode).json({ message: result.error });
     }
-    
-    // Verificar que el test pertenece a un estudiante del usuario
-    if (test.student.userId !== req.user.id) {
-      return res.status(403).json({ message: 'No autorizado' });
-    }
-    
-    let pdfPath = null;
-    
-    // Intentar generar PDF, pero si falla, continuamos sin él
-    try {
-      if (process.env.ENABLE_PDF_GENERATION === 'true') {
-        const pdfResult = await generatePDF(test.content, {
-          title: test.title,
-          studentName: test.student.name,
-          language: test.language,
-          level: test.level
-        });
-        pdfPath = pdfResult.path;
-      }
-    } catch (error) {
-      req.logger.warn('Error al generar PDF, continuando sin PDF:', error);
-      // Continuar sin PDF
-    }
-    
-    // Enviar email (con o sin PDF adjunto)
-    await sendTestByEmail(test.student, test, pdfPath);
-    
-    // Eliminar el archivo temporal si existe
-    if (pdfPath && fs.existsSync(pdfPath)) {
-      fs.unlinkSync(pdfPath);
-    }
-    
-    // Actualizar estado del test
-    await test.update({
-      status: 'sent',
-      sentAt: new Date()
-    });
     
     res.json({ 
       message: 'Test enviado correctamente',
-      test
+      test: result.test
     });
   } catch (error) {
     req.logger.error('Error al enviar test:', error);
@@ -201,74 +81,18 @@ const sendTest = async (req, res) => {
   }
 };
 
-// Generar y enviar test en un solo paso
+// Generate and send test in one step
 const generateAndSendTest = async (req, res) => {
   try {
-    const { studentId, options } = req.body;
+    const result = await testService.generateAndSendTest(req.body, req.user.id, req.logger);
     
-    // Verificar que el estudiante pertenece al usuario
-    const student = await Student.findByPk(studentId);
-    if (!student || student.userId !== req.user.id) {
-      return res.status(403).json({ message: 'No autorizado para generar test para este estudiante' });
+    if (result.error) {
+      return res.status(result.statusCode).json({ message: result.error });
     }
-    
-    // Añadir el nombre del estudiante a las opciones
-    const testOptions = {
-      ...options,
-      studentName: student.name
-    };
-    
-    // Generar contenido con OpenAI
-    req.logger.info(`Generando test para estudiante ${student.name} (ID: ${studentId})`);
-    const content = await generateOpenAITest(testOptions);
-    
-    // Crear el nuevo test
-    const test = await Test.create({
-      studentId,
-      title: `${options.language} Test - Level ${options.level}`,
-      language: options.language,
-      level: options.level,
-      content,
-      status: 'draft'
-    });
-    
-    let pdfPath = null;
-    
-    // Intentar generar PDF, pero si falla, continuamos sin él
-    try {
-      if (process.env.ENABLE_PDF_GENERATION === 'true') {
-        req.logger.info(`Generando PDF para test ID: ${test.id}`);
-        const pdfResult = await generatePDF(content, {
-          title: test.title,
-          studentName: student.name,
-          language: options.language,
-          level: options.level
-        });
-        pdfPath = pdfResult.path;
-      }
-    } catch (error) {
-      req.logger.warn('Error al generar PDF, continuando sin PDF:', error);
-      // Continuar sin PDF
-    }
-    
-    // Enviar email (con o sin PDF adjunto)
-    req.logger.info(`Enviando test a ${student.email}`);
-    await sendTestByEmail(student, test, pdfPath);
-    
-    // Eliminar el archivo temporal si existe
-    if (pdfPath && fs.existsSync(pdfPath)) {
-      fs.unlinkSync(pdfPath);
-    }
-    
-    // Actualizar estado del test
-    await test.update({
-      status: 'sent',
-      sentAt: new Date()
-    });
     
     res.status(201).json({ 
       message: 'Test generado y enviado correctamente',
-      test
+      test: result.test
     });
   } catch (error) {
     req.logger.error('Error al generar y enviar test:', error);
@@ -279,68 +103,32 @@ const generateAndSendTest = async (req, res) => {
   }
 };
 
-// Actualizar un test
+// Update a test
 const updateTest = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content } = req.body;
+    const result = await testService.updateTest(id, req.user.id, req.body);
     
-    // Buscar el test
-    const test = await Test.findByPk(id, {
-      include: [{
-        model: Student,
-        as: 'student',
-        attributes: ['userId']
-      }]
-    });
-    
-    if (!test) {
-      return res.status(404).json({ message: 'Test no encontrado' });
+    if (result.error) {
+      return res.status(result.statusCode).json({ message: result.error });
     }
     
-    // Verificar que el test pertenece a un estudiante del usuario
-    if (test.student.userId !== req.user.id) {
-      return res.status(403).json({ message: 'No autorizado' });
-    }
-    
-    // Actualizar test
-    await test.update({
-      title: title || test.title,
-      content: content || test.content
-    });
-    
-    res.json(test);
+    res.json(result.test);
   } catch (error) {
     req.logger.error('Error al actualizar test:', error);
     res.status(500).json({ message: 'Error en el servidor' });
   }
 };
 
-// Eliminar un test
+// Delete a test
 const deleteTest = async (req, res) => {
   try {
     const { id } = req.params;
+    const result = await testService.deleteTest(id, req.user.id);
     
-    // Buscar el test
-    const test = await Test.findByPk(id, {
-      include: [{
-        model: Student,
-        as: 'student',
-        attributes: ['userId']
-      }]
-    });
-    
-    if (!test) {
-      return res.status(404).json({ message: 'Test no encontrado' });
+    if (result.error) {
+      return res.status(result.statusCode).json({ message: result.error });
     }
-    
-    // Verificar que el test pertenece a un estudiante del usuario
-    if (test.student.userId !== req.user.id) {
-      return res.status(403).json({ message: 'No autorizado' });
-    }
-    
-    // Eliminar test
-    await test.destroy();
     
     res.json({ message: 'Test eliminado correctamente' });
   } catch (error) {
