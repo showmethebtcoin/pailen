@@ -1,0 +1,19 @@
+
+{
+  "totalStudents": "Total de Estudiantes",
+  "activeStudents": "Estudiantes Activos",
+  "studentsThisMonth": "Nuevos Estudiantes este Mes",
+  "studentsBrief": "Resumen de Estudiantes",
+  "recentStudents": "Estudiantes Recientes",
+  "recentlyAddedStudents": "Estudiantes agregados recientemente",
+  "languageDistribution": "Distribución de Idiomas",
+  "studentLevels": "Niveles de Estudiantes",
+  "viewAll": "Ver Todos",
+  "statsLoading": "Cargando estadísticas...",
+  "welcomeBack": "Bienvenido de nuevo",
+  "lastLogin": "Último inicio de sesión",
+  "todayClasses": "Clases de Hoy",
+  "upcomingTests": "Próximos Exámenes",
+  "title": "Panel de Control",
+  "welcome": "Bienvenido de nuevo"
+}

@@ -1,0 +1,62 @@
+
+{
+  "hero": {
+    "title": "The Ultimate Platform for Language Tutors",
+    "subtitle": "Simplify your teaching process, enhance student engagement, and focus on what matters most: teaching.",
+    "getStarted": "Get Started for Free",
+    "learnMore": "Learn More",
+    "signin": "Sign In",
+    "signIn": "Sign In",
+    "tagline": "For language tutors",
+    "description": "Simplify your teaching process, enhance student engagement, and focus on what matters most: teaching."
+  },
+  "features": {
+    "title": "Powerful Features for Language Teachers",
+    "subtitle": "Everything you need to manage your teaching business efficiently",
+    "description": "Everything you need to manage your teaching business efficiently",
+    "studentManagement": {
+      "title": "Student Management",
+      "description": "Keep track of all your students, their progress, and personalize their learning journey."
+    },
+    "testGeneration": {
+      "title": "Test Generation",
+      "description": "Create customized language tests with AI assistance based on student level and needs."
+    },
+    "scheduling": {
+      "title": "Smart Scheduling",
+      "description": "Organize your classes and send automated reminders to avoid missed appointments."
+    },
+    "analytics": {
+      "title": "Performance Analytics",
+      "description": "Get insights on student progress and identify areas that need more attention."
+    },
+    "progress": {
+      "title": "Progress Tracking",
+      "description": "Monitor student development and adapt your teaching strategy for better results."
+    }
+  },
+  "cta": {
+    "title": "Ready to transform your teaching experience?",
+    "subtitle": "Join thousands of language tutors who have improved their teaching process with our platform.",
+    "button": "Start Your Free Trial",
+    "description": "Join thousands of language tutors who have improved their teaching process with our platform.",
+    "action": "Start Your Free Trial"
+  },
+  "footer": {
+    "product": "Product",
+    "features": "Features",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "company": "Company",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "careers": "Careers",
+    "legal": "Legal",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookies Policy",
+    "copyright": "© 2023 Pailen. All rights reserved.",
+    "slogan": "Making language teaching more effective",
+    "rights": "All rights reserved"
+  }
+}

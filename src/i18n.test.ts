@@ -28,4 +28,17 @@ describe('i18n configuration', () => {
     expect(esTranslation).toBeDefined();
     expect(enTranslation).toBeDefined();
   });
+  
+  test('should have feature-specific translations', () => {
+    // Test for nested translations in Spanish
+    expect(i18n.t('landing.hero.title')).toBeDefined();
+    expect(i18n.t('auth.login')).toBeDefined();
+    expect(i18n.t('dashboard.totalStudents')).toBeDefined();
+    
+    // Switch to English and test
+    i18n.changeLanguage('en');
+    expect(i18n.t('landing.hero.title')).toBeDefined();
+    expect(i18n.t('auth.login')).toBeDefined();
+    expect(i18n.t('dashboard.totalStudents')).toBeDefined();
+  });
 });

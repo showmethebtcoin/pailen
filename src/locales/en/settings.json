@@ -1,0 +1,24 @@
+
+{
+  "title": "Settings",
+  "profile": "Profile Settings",
+  "account": "Account Settings",
+  "preferences": "Preferences",
+  "notifications": "Notifications",
+  "security": "Security",
+  "language": "Language",
+  "theme": "Theme",
+  "darkMode": "Dark Mode",
+  "lightMode": "Light Mode",
+  "systemDefault": "System Default",
+  "saved": "Settings Saved",
+  "saveError": "Error Saving Settings",
+  "updateProfile": "Update Profile",
+  "changePassword": "Change Password",
+  "currentPassword": "Current Password",
+  "newPassword": "New Password",
+  "confirmNewPassword": "Confirm New Password",
+  "passwordChanged": "Password Changed",
+  "passwordChangeError": "Error Changing Password",
+  "incorrectPassword": "Incorrect current password"
+}

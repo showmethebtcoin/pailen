@@ -1,0 +1,24 @@
+
+{
+  "title": "Configuración",
+  "profile": "Configuración del Perfil",
+  "account": "Configuración de la Cuenta",
+  "preferences": "Preferencias",
+  "notifications": "Notificaciones",
+  "security": "Seguridad",
+  "language": "Idioma",
+  "theme": "Tema",
+  "darkMode": "Modo Oscuro",
+  "lightMode": "Modo Claro",
+  "systemDefault": "Predeterminado del Sistema",
+  "saved": "Configuración Guardada",
+  "saveError": "Error al Guardar la Configuración",
+  "updateProfile": "Actualizar Perfil",
+  "changePassword": "Cambiar Contraseña",
+  "currentPassword": "Contraseña Actual",
+  "newPassword": "Nueva Contraseña",
+  "confirmNewPassword": "Confirmar Nueva Contraseña",
+  "passwordChanged": "Contraseña Cambiada",
+  "passwordChangeError": "Error al Cambiar la Contraseña",
+  "incorrectPassword": "Contraseña actual incorrecta"
+}

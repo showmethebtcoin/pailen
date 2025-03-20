@@ -1,0 +1,62 @@
+
+{
+  "hero": {
+    "title": "La Plataforma Definitiva para Profesores de Idiomas",
+    "subtitle": "Simplifica tu proceso de enseñanza, mejora la participación de los estudiantes y concéntrate en lo más importante: enseñar.",
+    "getStarted": "Comenzar Gratis",
+    "learnMore": "Saber Más",
+    "signin": "Iniciar Sesión", 
+    "signIn": "Iniciar Sesión",
+    "tagline": "Para profesores de idiomas",
+    "description": "Simplifica tu proceso de enseñanza, mejora la participación de los estudiantes y concéntrate en lo más importante: enseñar."
+  },
+  "features": {
+    "title": "Potentes Funciones para Profesores de Idiomas",
+    "subtitle": "Todo lo que necesitas para gestionar eficientemente tu negocio de enseñanza",
+    "description": "Todo lo que necesitas para gestionar eficientemente tu negocio de enseñanza",
+    "studentManagement": {
+      "title": "Gestión de Estudiantes",
+      "description": "Mantén un seguimiento de todos tus estudiantes, su progreso y personaliza su camino de aprendizaje."
+    },
+    "testGeneration": {
+      "title": "Generación de Exámenes",
+      "description": "Crea exámenes de idiomas personalizados con asistencia de IA basados en el nivel y necesidades del estudiante."
+    },
+    "scheduling": {
+      "title": "Programación Inteligente",
+      "description": "Organiza tus clases y envía recordatorios automáticos para evitar citas perdidas."
+    },
+    "analytics": {
+      "title": "Análisis de Rendimiento",
+      "description": "Obtén información sobre el progreso de los estudiantes e identifica áreas que necesitan más atención."
+    },
+    "progress": {
+      "title": "Seguimiento de Progreso",
+      "description": "Monitoriza el desarrollo del estudiante y adapta tu estrategia de enseñanza para obtener mejores resultados."
+    }
+  },
+  "cta": {
+    "title": "¿Listo para transformar tu experiencia de enseñanza?",
+    "subtitle": "Únete a miles de profesores de idiomas que han mejorado su proceso de enseñanza con nuestra plataforma.",
+    "button": "Comienza tu Prueba Gratuita",
+    "description": "Únete a miles de profesores de idiomas que han mejorado su proceso de enseñanza con nuestra plataforma.",
+    "action": "Comienza tu Prueba Gratuita"
+  },
+  "footer": {
+    "product": "Producto",
+    "features": "Características",
+    "pricing": "Precios",
+    "faq": "Preguntas Frecuentes",
+    "company": "Empresa",
+    "about": "Acerca de Nosotros",
+    "contact": "Contáctanos",
+    "careers": "Carreras",
+    "legal": "Legal",
+    "terms": "Términos de Servicio",
+    "privacy": "Política de Privacidad",
+    "cookies": "Política de Cookies",
+    "copyright": "© 2023 Pailen. Todos los derechos reservados.",
+    "slogan": "Haciendo la enseñanza de idiomas más efectiva",
+    "rights": "Todos los derechos reservados"
+  }
+}

@@ -1,0 +1,19 @@
+
+{
+  "totalStudents": "Total Students",
+  "activeStudents": "Active Students",
+  "studentsThisMonth": "New Students This Month",
+  "studentsBrief": "Students Brief",
+  "recentStudents": "Recent Students",
+  "recentlyAddedStudents": "Recently added students",
+  "languageDistribution": "Language Distribution",
+  "studentLevels": "Student Levels",
+  "viewAll": "View All",
+  "statsLoading": "Loading statistics...",
+  "welcomeBack": "Welcome back",
+  "lastLogin": "Last login",
+  "todayClasses": "Today's Classes",
+  "upcomingTests": "Upcoming Tests",
+  "title": "Dashboard",
+  "welcome": "Welcome back"
+}
