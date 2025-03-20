@@ -1,14 +1,10 @@
 
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-}
-
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+export const ProtectedRoute: React.FC = () => {
   const { isAuthenticated, loading, isSubscriptionActive, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -39,5 +35,5 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     );
   }
 
-  return isAuthenticated ? <>{children}</> : null;
+  return isAuthenticated ? <Outlet /> : null;
 };
