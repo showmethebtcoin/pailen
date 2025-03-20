@@ -1,4 +1,3 @@
-
 {
   "common": {
     "welcome": "Welcome",
@@ -180,7 +179,7 @@
       "legal": "Legal",
       "privacy": "Privacy",
       "terms": "Terms",
-      "cookies": "Cookie Policy",
+      "cookies": "Cookies",
       "rights": "All rights reserved"
     }
   },
@@ -195,5 +194,51 @@
   "language": {
     "switchTo": "Switch to Español",
     "current": "English"
+  },
+  "cookies": {
+    "title": "Cookie Policy",
+    "lastUpdated": "Last updated",
+    "intro": "We use cookies to improve your experience on our platform"
+  },
+  "pricing": {
+    "title": "Plans and Pricing",
+    "subtitle": "Choose the perfect plan for your teaching needs",
+    "trialInfo": "All plans include a 14-day free trial",
+    "monthly": "monthly",
+    "yearly": "yearly",
+    "mostPopular": "Most popular",
+    "basic": {
+      "name": "Basic",
+      "description": "Ideal for independent teachers who are just starting"
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "Perfect for established teachers with multiple students"
+    },
+    "professional": {
+      "name": "Professional",
+      "description": "For professionals and academies with advanced needs"
+    },
+    "cta": {
+      "basic": "Get started",
+      "premium": "Choose Premium",
+      "professional": "Contact sales"
+    },
+    "faq": {
+      "title": "Pricing FAQs",
+      "q1": "Can I change plans later?",
+      "a1": "Yes, you can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.",
+      "q2": "What payment methods do you accept?",
+      "a2": "We accept all major credit cards (Visa, Mastercard, American Express) and PayPal.",
+      "q3": "Do you offer discounts for annual payment?",
+      "a3": "Yes, we offer a 20% discount when you choose annual billing on any of our plans.",
+      "q4": "What happens when my free trial ends?",
+      "a4": "When your trial period ends, your account will automatically convert to the selected plan. We'll send you a reminder before it ends."
+    },
+    "custom": {
+      "title": "Need a custom plan?",
+      "description": "Contact us to discuss your specific needs and get a custom quote.",
+      "cta": "Contact sales"
+    }
   }
 }

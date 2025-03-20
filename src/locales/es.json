@@ -1,4 +1,3 @@
-
 {
   "common": {
     "welcome": "Bienvenido",
@@ -180,7 +179,7 @@
       "legal": "Legal",
       "privacy": "Privacidad",
       "terms": "Términos",
-      "cookies": "Política de cookies",
+      "cookies": "Cookies",
       "rights": "Todos los derechos reservados"
     }
   },
@@ -195,5 +194,51 @@
   "language": {
     "switchTo": "Cambiar a English",
     "current": "Español"
+  },
+  "cookies": {
+    "title": "Política de Cookies",
+    "lastUpdated": "Última actualización",
+    "intro": "Utilizamos cookies para mejorar tu experiencia en nuestra plataforma"
+  },
+  "pricing": {
+    "title": "Planes y Precios",
+    "subtitle": "Elige el plan perfecto para tus necesidades de enseñanza",
+    "trialInfo": "Todos los planes incluyen una prueba gratuita de 14 días",
+    "monthly": "mensual",
+    "yearly": "anual",
+    "mostPopular": "Más popular",
+    "basic": {
+      "name": "Básico",
+      "description": "Ideal para profesores independientes que están comenzando"
+    },
+    "premium": {
+      "name": "Premium",
+      "description": "Perfecto para profesores establecidos con múltiples estudiantes"
+    },
+    "professional": {
+      "name": "Profesional",
+      "description": "Para profesionales y academias con necesidades avanzadas"
+    },
+    "cta": {
+      "basic": "Comenzar ahora",
+      "premium": "Elegir Premium",
+      "professional": "Contactar ventas"
+    },
+    "faq": {
+      "title": "Preguntas frecuentes sobre precios",
+      "q1": "¿Puedo cambiar de plan más adelante?",
+      "a1": "Sí, puedes actualizar o degradar tu plan en cualquier momento. Los cambios se reflejarán en tu próximo ciclo de facturación.",
+      "q2": "¿Qué métodos de pago aceptan?",
+      "a2": "Aceptamos todas las tarjetas de crédito principales (Visa, Mastercard, American Express) y PayPal.",
+      "q3": "¿Ofrecen descuentos para pago anual?",
+      "a3": "Sí, ofrecemos un 20% de descuento cuando eliges facturación anual en cualquiera de nuestros planes.",
+      "q4": "¿Qué sucede cuando termina mi prueba gratuita?",
+      "a4": "Al finalizar tu periodo de prueba, tu cuenta se convertirá automáticamente al plan seleccionado. Te enviaremos un recordatorio antes de que termine."
+    },
+    "custom": {
+      "title": "¿Necesitas un plan personalizado?",
+      "description": "Contáctanos para discutir tus necesidades específicas y obtener un presupuesto personalizado.",
+      "cta": "Contactar con ventas"
+    }
   }
 }

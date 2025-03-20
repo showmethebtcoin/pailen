@@ -20,6 +20,8 @@ import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Cookies from "./pages/Cookies";
+import Pricing from "./pages/Pricing";
 
 // Components
 import AppLayout from "./components/AppLayout";
@@ -46,6 +48,8 @@ const App = () => {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
+                <Route path="/cookies" element={<Cookies />} />
+                <Route path="/pricing" element={<Pricing />} />
 
                 {/* Protected routes */}
                 <Route
