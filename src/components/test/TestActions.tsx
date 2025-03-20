@@ -1,10 +1,15 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Test } from '@/types/student';
-import { Loader2, Send, Download, Copy, Sparkles, CloudUpload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { jsPDF } from 'jspdf';
+import { generateTestPdf } from '@/utils/pdfGenerator';
+
+// Import button components
+import GenerateButton from './buttons/GenerateButton';
+import CopyButton from './buttons/CopyButton';
+import DownloadButton from './buttons/DownloadButton';
+import DriveButton from './buttons/DriveButton';
+import SendButton from './buttons/SendButton';
 
 interface TestActionsProps {
   generatedTest: Test | null;
@@ -43,57 +48,7 @@ const TestActions: React.FC<TestActionsProps> = ({
     if (!generatedTest) return;
     
     try {
-      const doc = new jsPDF();
-      
-      // Configurar título
-      doc.setFontSize(16);
-      doc.text(generatedTest.title, 20, 20);
-      
-      // Configurar contenido
-      doc.setFontSize(12);
-      
-      // Dividir el contenido en líneas
-      const contentLines = generatedTest.content.split('\n');
-      let y = 30;
-      
-      contentLines.forEach(line => {
-        // Comprobar si es un título de sección (comenzando con #)
-        if (line.startsWith('# ')) {
-          y += 5;
-          doc.setFontSize(14);
-          doc.text(line.substring(2), 20, y);
-          doc.setFontSize(12);
-          y += 7;
-        } 
-        // Comprobar si es un subtítulo (comenzando con ##)
-        else if (line.startsWith('## ')) {
-          y += 3;
-          doc.setFontSize(13);
-          doc.text(line.substring(3), 20, y);
-          doc.setFontSize(12);
-          y += 6;
-        }
-        // Texto normal
-        else if (line.trim() !== '') {
-          // Añadir salto de página si es necesario
-          if (y > 280) {
-            doc.addPage();
-            y = 20;
-          }
-          
-          doc.text(line, 20, y);
-          y += 6;
-        }
-        else {
-          y += 3; // Espacios en blanco
-        }
-      });
-      
-      // Generar nombre del archivo
-      const fileName = `${generatedTest.language}_Test_${generatedTest.level}_${new Date().toISOString().split('T')[0]}.pdf`;
-      
-      // Descargar PDF
-      doc.save(fileName);
+      const fileName = generateTestPdf(generatedTest);
       
       toast({
         title: "PDF Downloaded",
@@ -124,78 +79,26 @@ const TestActions: React.FC<TestActionsProps> = ({
     }
   };
 
+  // If no test is generated yet, show only the generate button
   if (!generatedTest) {
-    return (
-      <Button onClick={onGenerateTest} disabled={isGenerating} className="w-full sm:w-auto">
-        {isGenerating ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Generating...
-          </>
-        ) : (
-          <>
-            <Sparkles className="mr-2 h-4 w-4" />
-            Generate Test
-          </>
-        )}
-      </Button>
-    );
+    return <GenerateButton isGenerating={isGenerating} onGenerate={onGenerateTest} />;
   }
 
+  // Show all action buttons when a test is available
   return (
     <div className="flex flex-col sm:flex-row gap-2 w-full">
-      <Button variant="outline" onClick={handleCopy} className="flex-1">
-        <Copy className="mr-2 h-4 w-4" />
-        Copy
-      </Button>
-      <Button variant="outline" onClick={handleDownloadPDF} className="flex-1">
-        <Download className="mr-2 h-4 w-4" />
-        Download PDF
-      </Button>
+      <CopyButton onCopy={handleCopy} />
+      <DownloadButton onDownload={handleDownloadPDF} />
+      
       {onUploadToDrive && (
-        driveLink ? (
-          <Button 
-            variant="outline" 
-            className="flex-1"
-            onClick={() => window.open(driveLink, '_blank')}
-          >
-            <CloudUpload className="mr-2 h-4 w-4" />
-            View in Drive
-          </Button>
-        ) : (
-          <Button 
-            variant="outline" 
-            onClick={handleUploadToDrive} 
-            disabled={isUploading}
-            className="flex-1"
-          >
-            {isUploading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Uploading...
-              </>
-            ) : (
-              <>
-                <CloudUpload className="mr-2 h-4 w-4" />
-                Save to Drive
-              </>
-            )}
-          </Button>
-        )
+        <DriveButton 
+          isUploading={isUploading} 
+          driveLink={driveLink || null} 
+          onUpload={handleUploadToDrive} 
+        />
       )}
-      <Button onClick={onSendTest} disabled={isSending} className="flex-1">
-        {isSending ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Sending...
-          </>
-        ) : (
-          <>
-            <Send className="mr-2 h-4 w-4" />
-            Send to Student
-          </>
-        )}
-      </Button>
+      
+      <SendButton isSending={isSending} onSend={onSendTest} />
     </div>
   );
 };
