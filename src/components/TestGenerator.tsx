@@ -20,9 +20,12 @@ const TestGenerator: React.FC<TestGeneratorProps> = ({ student, onTestCreated })
     generatedTest,
     isGenerating,
     isSending,
+    isUploading,
+    driveLink,
     handleGenerateTest,
     handleSendTest,
-    handleCopyToClipboard
+    handleCopyToClipboard,
+    handleUploadToDrive
   } = useTestGenerator(student, onTestCreated);
 
   return (
@@ -47,9 +50,12 @@ const TestGenerator: React.FC<TestGeneratorProps> = ({ student, onTestCreated })
           generatedTest={generatedTest}
           isGenerating={isGenerating}
           isSending={isSending}
+          isUploading={isUploading}
+          driveLink={driveLink}
           onGenerateTest={handleGenerateTest}
           onSendTest={handleSendTest}
           onCopyToClipboard={handleCopyToClipboard}
+          onUploadToDrive={handleUploadToDrive}
         />
       </CardFooter>
     </Card>
