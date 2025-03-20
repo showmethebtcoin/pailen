@@ -1,8 +1,14 @@
 
-// Este archivo exporta todos los servicios para mantener la compatibilidad con el código existente
 import { api } from './apiClient';
 import { authService } from './authService';
 import { studentService } from './studentService';
 import { testService } from './testService';
+import { scheduledTaskService } from './scheduledTaskService';
 
-export { api, authService, studentService, testService };
+export {
+  api,
+  authService,
+  studentService,
+  testService,
+  scheduledTaskService
+};

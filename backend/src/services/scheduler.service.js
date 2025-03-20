@@ -2,6 +2,7 @@
 const cron = require('node-cron');
 const winston = require('winston');
 const { sendWeeklyLessonTopics, clearAllLessonTopics } = require('./lesson-topic.service');
+const { processScheduledTasks } = require('./scheduled-task.service');
 
 // Configuración de Winston para logs
 const logger = winston.createLogger({
@@ -47,6 +48,19 @@ const startScheduledTasks = () => {
       logger.info(`Resultado de limpieza de temas: ${JSON.stringify(result)}`);
     } catch (error) {
       logger.error(`Error en tarea programada de limpieza de temas: ${error.message}`);
+    }
+  });
+  
+  // Revisar tareas programadas por los usuarios cada minuto
+  cron.schedule('* * * * *', async () => {
+    logger.info('Verificando tareas programadas pendientes');
+    try {
+      const result = await processScheduledTasks(logger);
+      if (result.processed > 0) {
+        logger.info(`Se procesaron ${result.processed} tareas programadas`);
+      }
+    } catch (error) {
+      logger.error(`Error al procesar tareas programadas: ${error.message}`);
     }
   });
   

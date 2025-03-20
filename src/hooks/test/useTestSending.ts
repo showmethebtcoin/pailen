@@ -7,6 +7,7 @@ import { testService } from '@/services/api';
 
 export function useTestSending(student: Student, onTestUpdated?: (test: Test) => void) {
   const [isSending, setIsSending] = useState(false);
+  const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
   const { toast } = useToast();
 
   const handleSendTest = async (testToSend: Test | null) => {
@@ -76,6 +77,8 @@ export function useTestSending(student: Student, onTestUpdated?: (test: Test) =>
 
   return {
     isSending,
-    handleSendTest
+    handleSendTest,
+    isScheduleDialogOpen,
+    setIsScheduleDialogOpen
   };
 }

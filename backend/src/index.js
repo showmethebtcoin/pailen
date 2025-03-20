@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth.routes');
 const studentRoutes = require('./routes/student.routes');
 const testRoutes = require('./routes/test.routes');
 const stripeRoutes = require('./routes/stripe.routes');
+const scheduledTaskRoutes = require('./routes/scheduled-task.routes');
 const { startScheduledTasks } = require('./services/scheduler.service');
 
 // Configuración de Winston para logs
@@ -52,6 +53,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/tests', testRoutes);
 app.use('/api/stripe', stripeRoutes);
+app.use('/api/scheduled-tasks', scheduledTaskRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {

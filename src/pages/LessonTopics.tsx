@@ -14,8 +14,8 @@ const LessonTopics: React.FC = () => {
 
   return (
     <AppLayout>
-      <div className="w-full">
-        <PageTransition>
+      <PageTransition>
+        <div className="w-full">
           <div className="container mx-auto py-6 space-y-6">
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div>
@@ -47,8 +47,8 @@ const LessonTopics: React.FC = () => {
               <LessonTopicManager students={filteredStudents} />
             )}
           </div>
-        </PageTransition>
-      </div>
+        </div>
+      </PageTransition>
     </AppLayout>
   );
 };
