@@ -52,17 +52,17 @@ const TestGenerator: React.FC<TestGeneratorProps> = ({ student, onTestCreated })
           isSending={isSending}
           isUploading={isUploading}
           driveLink={driveLink}
-          onGenerateTest={() => {
-            handleGenerateTest();
+          onGenerateTest={async () => {
+            await handleGenerateTest();
             return Promise.resolve();
           }}
-          onSendTest={() => {
-            handleSendTest();
+          onSendTest={async () => {
+            await handleSendTest();
             return Promise.resolve();
           }}
           onCopyToClipboard={handleCopyToClipboard}
-          onUploadToDrive={handleUploadToDrive ? () => {
-            handleUploadToDrive();
+          onUploadToDrive={handleUploadToDrive ? async () => {
+            await handleUploadToDrive();
             return Promise.resolve();
           } : undefined}
         />
