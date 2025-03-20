@@ -1,19 +1,15 @@
 
 import axios from 'axios';
 
-// Configuración base de axios
-// In Docker environment, the API URL is relative to the domain
-const API_URL = import.meta.env.VITE_API_URL || '/api';
-
-// Crear instancia de axios
+// Crear instancia de axios con configuración base
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Interceptor para agregar token a las solicitudes
+// Interceptor para añadir token a las peticiones
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -27,29 +23,77 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor para manejar errores globalmente
+// Interceptor para manejar errores de autenticación y refrescar token
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    // Si el error es 401 (Unauthorized), redirigir a login
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Si el error es 401 (Unauthorized) y no hemos intentado refrescar el token
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      try {
+        // Intentar refrescar el token
+        const refreshToken = localStorage.getItem('refreshToken');
+        
+        if (!refreshToken) {
+          // Si no hay refresh token, forzar logout
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = '/login';
+          return Promise.reject(error);
+        }
+        
+        // Llamar al endpoint de refresh token
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL || '/api'}/auth/refresh-token`,
+          { refreshToken }
+        );
+        
+        // Guardar el nuevo token
+        const newToken = response.data.token;
+        localStorage.setItem('token', newToken);
+        
+        // Reintentar la petición original con el nuevo token
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        return axios(originalRequest);
+        
+      } catch (refreshError) {
+        // Si falla el refresco, logout
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
+      }
     }
+    
     return Promise.reject(error);
   }
 );
 
 // Servicios de autenticación
-export const authService = {
-  login: async (email: string, password: string) => {
+const authService = {
+  login: async (email, password) => {
     const response = await api.post('/auth/login', { email, password });
+    
+    // Guardar refresh token
+    if (response.data.refreshToken) {
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+    }
+    
     return response.data;
   },
   
-  register: async (name: string, email: string, password: string) => {
-    const response = await api.post('/auth/register', { name, email, password });
+  register: async (email, password, name) => {
+    const response = await api.post('/auth/register', { email, password, name });
+    
+    // Guardar refresh token
+    if (response.data.refreshToken) {
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+    }
+    
     return response.data;
   },
   
@@ -57,94 +101,13 @@ export const authService = {
     const response = await api.get('/auth/profile');
     return response.data;
   },
+  
+  logout: () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+  }
 };
 
-// Servicios de estudiantes
-export const studentService = {
-  getAll: async () => {
-    const response = await api.get('/students');
-    return response.data;
-  },
-  
-  getById: async (id: string) => {
-    const response = await api.get(`/students/${id}`);
-    return response.data;
-  },
-  
-  create: async (studentData: any) => {
-    const response = await api.post('/students', studentData);
-    return response.data;
-  },
-  
-  update: async (id: string, studentData: any) => {
-    const response = await api.put(`/students/${id}`, studentData);
-    return response.data;
-  },
-  
-  delete: async (id: string) => {
-    const response = await api.delete(`/students/${id}`);
-    return response.data;
-  },
-};
-
-// Servicios de tests
-export const testService = {
-  getAll: async () => {
-    const response = await api.get('/tests');
-    return response.data;
-  },
-  
-  getById: async (id: string) => {
-    const response = await api.get(`/tests/${id}`);
-    return response.data;
-  },
-  
-  create: async (testData: any) => {
-    const response = await api.post('/tests', testData);
-    return response.data;
-  },
-  
-  generate: async (options: any) => {
-    const response = await api.post('/tests/generate', options);
-    return response.data;
-  },
-  
-  send: async (testId: string) => {
-    const response = await api.post('/tests/send', { testId });
-    return response.data;
-  },
-  
-  update: async (id: string, testData: any) => {
-    const response = await api.put(`/tests/${id}`, testData);
-    return response.data;
-  },
-  
-  delete: async (id: string) => {
-    const response = await api.delete(`/tests/${id}`);
-    return response.data;
-  },
-};
-
-// Servicios de pago
-export const paymentService = {
-  createCheckoutSession: async (priceId: string, successUrl: string, cancelUrl: string) => {
-    const response = await api.post('/stripe/create-checkout-session', {
-      priceId,
-      successUrl,
-      cancelUrl
-    });
-    return response.data;
-  },
-  
-  getSubscriptionStatus: async () => {
-    const response = await api.get('/stripe/subscription-status');
-    return response.data;
-  },
-  
-  cancelSubscription: async () => {
-    const response = await api.post('/stripe/cancel-subscription');
-    return response.data;
-  },
-};
-
-export default api;
+// Exportar la instancia de API y los servicios
+export { api, authService };

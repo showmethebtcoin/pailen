@@ -1,6 +1,6 @@
 
 const User = require('../models/User');
-const { generateToken } = require('../config/jwt');
+const { generateToken, generateRefreshToken, verifyToken } = require('../config/jwt');
 
 // Registro de nuevo usuario
 const register = async (req, res) => {
@@ -20,8 +20,9 @@ const register = async (req, res) => {
       password,
     });
 
-    // Generar token JWT
+    // Generar tokens
     const token = generateToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
 
     // Devolver respuesta sin incluir la contraseña
     res.status(201).json({
@@ -32,6 +33,7 @@ const register = async (req, res) => {
         email: user.email,
       },
       token,
+      refreshToken,
     });
   } catch (error) {
     console.error('Error en el registro:', error);
@@ -56,8 +58,9 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'Credenciales inválidas' });
     }
 
-    // Generar token JWT
+    // Generar tokens JWT
     const token = generateToken(user.id);
+    const refreshToken = generateRefreshToken(user.id);
 
     // Devolver respuesta
     res.json({
@@ -68,6 +71,7 @@ const login = async (req, res) => {
         email: user.email,
       },
       token,
+      refreshToken,
     });
   } catch (error) {
     console.error('Error en el login:', error);
@@ -93,8 +97,45 @@ const getProfile = async (req, res) => {
   }
 };
 
+// Refrescar token
+const refreshToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    
+    if (!refreshToken) {
+      return res.status(400).json({ message: 'No se proporcionó token de refresco' });
+    }
+    
+    // Verificar el token de refresco
+    const decoded = verifyToken(refreshToken);
+    
+    // Verificar que sea un token de refresco
+    if (decoded.type !== 'refresh') {
+      return res.status(401).json({ message: 'Token inválido' });
+    }
+    
+    // Buscar usuario en la base de datos
+    const user = await User.findByPk(decoded.id);
+    if (!user) {
+      return res.status(401).json({ message: 'Usuario no encontrado' });
+    }
+    
+    // Generar nuevo token de acceso
+    const newToken = generateToken(user.id);
+    
+    // Devolver respuesta
+    res.json({
+      token: newToken,
+    });
+  } catch (error) {
+    console.error('Error al refrescar token:', error);
+    res.status(401).json({ message: 'Token de refresco inválido o expirado' });
+  }
+};
+
 module.exports = {
   register,
   login,
   getProfile,
+  refreshToken,
 };
