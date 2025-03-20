@@ -9,7 +9,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { useStudents } from '@/hooks/useStudents';
 import LessonTopicManager from '@/components/students/LessonTopicManager';
-import PageTransition from '@/components/PageTransition';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { motion } from 'framer-motion';
 
