@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth.routes');
 const studentRoutes = require('./routes/student.routes');
 const testRoutes = require('./routes/test.routes');
 const stripeRoutes = require('./routes/stripe.routes');
+const { startScheduledTasks } = require('./services/scheduler.service');
 
 // Configuración de Winston para logs
 const logger = winston.createLogger({
@@ -80,6 +81,10 @@ async function startServer() {
     // Sincronizar modelos con la base de datos
     await sequelize.sync({ force: false });
     console.log('Modelos sincronizados con la base de datos.');
+    
+    // Iniciar tareas programadas
+    startScheduledTasks();
+    console.log('Tareas programadas iniciadas correctamente.');
     
     app.listen(PORT, () => {
       console.log(`Servidor corriendo en el puerto ${PORT}`);

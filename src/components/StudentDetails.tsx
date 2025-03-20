@@ -7,6 +7,8 @@ import { sendTestEmail } from '@/utils/email';
 import StudentInfo from './students/StudentInfo';
 import TestSection from './students/TestSection';
 import TestViewDialog from './students/TestViewDialog';
+import LessonTopicManager from './students/LessonTopicManager';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface StudentDetailsProps {
   student: Student;
@@ -55,17 +57,30 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ student }) => {
     <div className="space-y-6">
       <StudentInfo student={student} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <TestSection 
-          student={student}
-          isGenerating={isGenerating}
-          setIsGenerating={setIsGenerating}
-          tests={tests}
-          onTestCreated={handleTestCreated}
-          onViewTest={setViewingTest}
-          onSendTest={handleSendTest}
-        />
-      </div>
+      <Tabs defaultValue="tests" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="tests">{t('students.tests')}</TabsTrigger>
+          <TabsTrigger value="lessonTopic">{t('students.nextLessonTopic')}</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="tests">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <TestSection 
+              student={student}
+              isGenerating={isGenerating}
+              setIsGenerating={setIsGenerating}
+              tests={tests}
+              onTestCreated={handleTestCreated}
+              onViewTest={setViewingTest}
+              onSendTest={handleSendTest}
+            />
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="lessonTopic">
+          <LessonTopicManager students={[student]} />
+        </TabsContent>
+      </Tabs>
 
       <TestViewDialog 
         viewingTest={viewingTest} 

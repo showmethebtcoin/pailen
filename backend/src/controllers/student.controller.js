@@ -1,5 +1,5 @@
-
 const Student = require('../models/Student');
+const lessonTopicService = require('../services/lesson-topic.service');
 
 // Obtener todos los estudiantes del usuario autenticado
 const getAllStudents = async (req, res) => {
@@ -124,10 +124,49 @@ const deleteStudent = async (req, res) => {
   }
 };
 
+// Actualizar el tema de la próxima clase para un estudiante
+const updateStudentLessonTopic = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { topic } = req.body;
+    
+    const result = await lessonTopicService.updateStudentLessonTopic(id, req.user.id, topic);
+    
+    if (result.error) {
+      return res.status(result.statusCode || 400).json({ message: result.error });
+    }
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error al actualizar tema de clase:', error);
+    res.status(500).json({ message: 'Error en el servidor' });
+  }
+};
+
+// Obtener el tema de la próxima clase para un estudiante
+const getStudentLessonTopic = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const result = await lessonTopicService.getStudentLessonTopic(id, req.user.id);
+    
+    if (result.error) {
+      return res.status(result.statusCode || 400).json({ message: result.error });
+    }
+    
+    res.json(result);
+  } catch (error) {
+    console.error('Error al obtener tema de clase:', error);
+    res.status(500).json({ message: 'Error en el servidor' });
+  }
+};
+
 module.exports = {
   getAllStudents,
   getStudentById,
   createStudent,
   updateStudent,
   deleteStudent,
+  updateStudentLessonTopic,
+  getStudentLessonTopic
 };

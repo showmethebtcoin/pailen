@@ -147,6 +147,17 @@ const studentService = {
   delete: async (id) => {
     const response = await api.delete(`/students/${id}`);
     return response.data;
+  },
+  
+  // Nuevos métodos para gestionar temas de clase
+  getStudentTopic: async (id) => {
+    const response = await api.get(`/students/${id}/topic`);
+    return response.data;
+  },
+  
+  updateStudentTopic: async (id, topic) => {
+    const response = await api.post(`/students/${id}/topic`, { topic });
+    return response.data;
   }
 };
 

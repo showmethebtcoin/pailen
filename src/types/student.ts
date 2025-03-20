@@ -7,6 +7,7 @@ export interface Student {
   level: string;
   hoursPerWeek: number;
   startDate: string;
+  nextLessonTopic?: string;
 }
 
 export interface Test {

@@ -6,6 +6,8 @@ const {
   createStudent,
   updateStudent,
   deleteStudent,
+  updateStudentLessonTopic,
+  getStudentLessonTopic,
 } = require('../controllers/student.controller');
 const { authenticate } = require('../middleware/auth');
 
@@ -20,5 +22,9 @@ router.get('/:id', getStudentById);
 router.post('/', createStudent);
 router.put('/:id', updateStudent);
 router.delete('/:id', deleteStudent);
+
+// Rutas para tema de próxima clase
+router.get('/:id/topic', getStudentLessonTopic);
+router.post('/:id/topic', updateStudentLessonTopic);
 
 module.exports = router;

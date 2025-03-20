@@ -40,6 +40,10 @@ const Student = sequelize.define(
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+    nextLessonTopic: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
   },
   {
     timestamps: true,
