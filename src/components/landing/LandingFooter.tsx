@@ -22,15 +22,14 @@ const LandingFooter = () => {
               <h3 className="font-medium mb-3">{t('landing.footer.product')}</h3>
               <ul className="space-y-2">
                 <li><Link to="/faq" className="text-muted-foreground hover:text-foreground">{t('landing.footer.faq')}</Link></li>
-                <li><Link to="/#pricing" className="text-muted-foreground hover:text-foreground">{t('landing.footer.pricing')}</Link></li>
+                <li><Link to="/pricing" className="text-muted-foreground hover:text-foreground">{t('landing.footer.pricing')}</Link></li>
               </ul>
             </div>
             
             <div>
               <h3 className="font-medium mb-3">{t('landing.footer.company')}</h3>
               <ul className="space-y-2">
-                <li><Link to="/#about" className="text-muted-foreground hover:text-foreground">{t('landing.footer.about')}</Link></li>
-                <li><Link to="/#blog" className="text-muted-foreground hover:text-foreground">{t('landing.footer.blog')}</Link></li>
+                <li><Link to="/about" className="text-muted-foreground hover:text-foreground">{t('landing.footer.about')}</Link></li>
                 <li><Link to="/contact" className="text-muted-foreground hover:text-foreground">{t('landing.footer.contact')}</Link></li>
               </ul>
             </div>
