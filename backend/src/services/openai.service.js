@@ -22,7 +22,7 @@ const generateOpenAITest = async (options) => {
     Incluye la fecha actual: ${new Date().toLocaleDateString()}.`;
   
   try {
-    // Usando la API de Chat Completions (GPT-4)
+    // Usando la API de Chat Completions (GPT-3.5-turbo)
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo", // Usando un modelo más disponible y rápido
       messages: [
@@ -37,6 +37,7 @@ const generateOpenAITest = async (options) => {
       ],
       max_tokens: 2048,
       temperature: 0.7,
+      timeout: 60000, // Aumentar timeout a 60 segundos
     });
     
     return response.data.choices[0].message.content.trim();

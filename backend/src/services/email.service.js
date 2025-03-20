@@ -45,17 +45,22 @@ Tu profesor de idiomas`,
   };
   
   // Añadir archivo adjunto si existe
-  if (pdfPath) {
-    const attachment = fs.readFileSync(pdfPath).toString('base64');
-    
-    msg.attachments = [
-      {
-        content: attachment,
-        filename: `Test_${test.language}_${test.level}.pdf`,
-        type: 'application/pdf',
-        disposition: 'attachment'
-      }
-    ];
+  if (pdfPath && fs.existsSync(pdfPath)) {
+    try {
+      const attachment = fs.readFileSync(pdfPath).toString('base64');
+      
+      msg.attachments = [
+        {
+          content: attachment,
+          filename: `Test_${test.language}_${test.level}.pdf`,
+          type: 'application/pdf',
+          disposition: 'attachment'
+        }
+      ];
+    } catch (error) {
+      console.warn('No se pudo adjuntar el PDF, continuando sin adjunto:', error.message);
+      // Continuar sin el archivo adjunto
+    }
   }
   
   try {
