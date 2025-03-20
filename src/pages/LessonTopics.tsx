@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useStudents } from '@/hooks/useStudents';
 import LessonTopicManager from '@/components/students/LessonTopicManager';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { motion } from 'framer-motion';
+import PageTransition from '@/components/PageTransition';
 
 const LessonTopics = () => {
   const { t } = useTranslation();
@@ -18,14 +18,8 @@ const LessonTopics = () => {
 
   return (
     <AppLayout>
-      <div className="min-h-full w-full">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ type: 'tween', ease: 'anticipate', duration: 0.5 }}
-          className="container mx-auto py-6 space-y-6"
-        >
+      <PageTransition>
+        <div className="container mx-auto py-6 space-y-6">
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <div>
               <h1 className="text-3xl font-bold tracking-tight">{t('students.lessonTopics')}</h1>
@@ -55,8 +49,8 @@ const LessonTopics = () => {
           ) : (
             <LessonTopicManager students={filteredStudents} />
           )}
-        </motion.div>
-      </div>
+        </div>
+      </PageTransition>
     </AppLayout>
   );
 };
