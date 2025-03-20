@@ -2,7 +2,10 @@
 const Test = require('../models/Test');
 const Student = require('../models/Student');
 const { generateOpenAITest } = require('../services/openai.service');
+const { generatePDF } = require('../services/pdf.service');
 const { sendTestByEmail } = require('../services/email.service');
+const fs = require('fs');
+const path = require('path');
 
 // Obtener todos los tests del usuario autenticado
 const getAllTests = async (req, res) => {
@@ -105,8 +108,14 @@ const generateTest = async (req, res) => {
       return res.status(403).json({ message: 'No autorizado para generar test para este estudiante' });
     }
     
+    // Añadir el nombre del estudiante a las opciones
+    const testOptions = {
+      ...options,
+      studentName: student.name
+    };
+    
     // Generar contenido con OpenAI
-    const content = await generateOpenAITest(options);
+    const content = await generateOpenAITest(testOptions);
     
     // Crear el nuevo test
     const test = await Test.create({
@@ -150,8 +159,19 @@ const sendTest = async (req, res) => {
       return res.status(403).json({ message: 'No autorizado' });
     }
     
-    // Enviar email
-    await sendTestByEmail(test.student, test);
+    // Generar PDF del test
+    const pdfResult = await generatePDF(test.content, {
+      title: test.title,
+      studentName: test.student.name,
+      language: test.language,
+      level: test.level
+    });
+    
+    // Enviar email con el PDF adjunto
+    await sendTestByEmail(test.student, test, pdfResult.path);
+    
+    // Eliminar el archivo temporal después de enviarlo
+    fs.unlinkSync(pdfResult.path);
     
     // Actualizar estado del test
     await test.update({
@@ -166,6 +186,72 @@ const sendTest = async (req, res) => {
   } catch (error) {
     req.logger.error('Error al enviar test:', error);
     res.status(500).json({ message: 'Error en el servidor' });
+  }
+};
+
+// Generar y enviar test en un solo paso
+const generateAndSendTest = async (req, res) => {
+  try {
+    const { studentId, options } = req.body;
+    
+    // Verificar que el estudiante pertenece al usuario
+    const student = await Student.findByPk(studentId);
+    if (!student || student.userId !== req.user.id) {
+      return res.status(403).json({ message: 'No autorizado para generar test para este estudiante' });
+    }
+    
+    // Añadir el nombre del estudiante a las opciones
+    const testOptions = {
+      ...options,
+      studentName: student.name
+    };
+    
+    // Generar contenido con OpenAI
+    req.logger.info(`Generando test para estudiante ${student.name} (ID: ${studentId})`);
+    const content = await generateOpenAITest(testOptions);
+    
+    // Crear el nuevo test
+    const test = await Test.create({
+      studentId,
+      title: `${options.language} Test - Level ${options.level}`,
+      language: options.language,
+      level: options.level,
+      content,
+      status: 'draft'
+    });
+    
+    // Generar PDF del test
+    req.logger.info(`Generando PDF para test ID: ${test.id}`);
+    const pdfResult = await generatePDF(content, {
+      title: test.title,
+      studentName: student.name,
+      language: options.language,
+      level: options.level
+    });
+    
+    // Enviar email con el PDF adjunto
+    req.logger.info(`Enviando test a ${student.email}`);
+    await sendTestByEmail(student, test, pdfResult.path);
+    
+    // Eliminar el archivo temporal después de enviarlo
+    fs.unlinkSync(pdfResult.path);
+    
+    // Actualizar estado del test
+    await test.update({
+      status: 'sent',
+      sentAt: new Date()
+    });
+    
+    res.status(201).json({ 
+      message: 'Test generado y enviado correctamente',
+      test
+    });
+  } catch (error) {
+    req.logger.error('Error al generar y enviar test:', error);
+    res.status(500).json({ 
+      message: 'Error en el servidor',
+      error: error.message
+    });
   }
 };
 
@@ -245,6 +331,7 @@ module.exports = {
   createTest,
   generateTest,
   sendTest,
+  generateAndSendTest,
   updateTest,
   deleteTest
 };

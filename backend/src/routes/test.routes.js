@@ -7,6 +7,7 @@ const {
   createTest,
   generateTest,
   sendTest,
+  generateAndSendTest,
   updateTest,
   deleteTest
 } = require('../controllers/test.controller');
@@ -26,5 +27,6 @@ router.delete('/:id', deleteTest);
 // Rutas específicas para generación y envío
 router.post('/generate', generateTest);
 router.post('/send', sendTest);
+router.post('/generate-and-send', generateAndSendTest);
 
 module.exports = router;

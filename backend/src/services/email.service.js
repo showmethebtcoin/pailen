@@ -1,20 +1,26 @@
 
 const sgMail = require('@sendgrid/mail');
+const fs = require('fs');
 
 // Configurar SendGrid con la API key
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Enviar test por email
-const sendTestByEmail = async (student, test) => {
+const sendTestByEmail = async (student, test, pdfPath) => {
   const msg = {
     to: student.email,
-    from: process.env.EMAIL_FROM || 'noreply@languageapp.com',
-    subject: `${test.title} - Language Test`,
+    from: {
+      email: process.env.EMAIL_FROM || 'noreply@languageapp.com',
+      name: 'Language App Teacher'
+    },
+    subject: `Tu nuevo test de ${test.language} - Nivel ${test.level}`,
     text: `Hola ${student.name},
 
 Aquí tienes tu test de ${test.language} de nivel ${test.level}.
 
 ${test.content}
+
+Adjunto encontrarás una versión en PDF del test.
 
 Buena suerte!
 
@@ -29,6 +35,8 @@ Tu profesor de idiomas`,
           <pre style="white-space: pre-wrap; font-family: inherit;">${test.content}</pre>
         </div>
         
+        <p>Adjunto encontrarás una versión en PDF del test.</p>
+        
         <p>¡Buena suerte!</p>
         
         <p>Saludos,<br>Tu profesor de idiomas</p>
@@ -36,9 +44,26 @@ Tu profesor de idiomas`,
     `
   };
   
+  // Añadir archivo adjunto si existe
+  if (pdfPath) {
+    const attachment = fs.readFileSync(pdfPath).toString('base64');
+    
+    msg.attachments = [
+      {
+        content: attachment,
+        filename: `Test_${test.language}_${test.level}.pdf`,
+        type: 'application/pdf',
+        disposition: 'attachment'
+      }
+    ];
+  }
+  
   try {
     await sgMail.send(msg);
-    return true;
+    return {
+      success: true,
+      message: `Email enviado exitosamente a ${student.email}`
+    };
   } catch (error) {
     console.error('Error al enviar email:', error);
     throw new Error('No se pudo enviar el email. Inténtalo de nuevo más tarde.');
