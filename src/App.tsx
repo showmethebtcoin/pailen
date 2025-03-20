@@ -16,6 +16,10 @@ import Students from "./pages/Students";
 import NotFound from "./pages/NotFound";
 import Subscription from "./pages/Subscription";
 import Admin from "./pages/Admin";
+import FAQ from "./pages/FAQ";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 // Components
 import AppLayout from "./components/AppLayout";
@@ -38,6 +42,10 @@ const App = () => {
                 <Route path="/" element={<Landing />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
 
                 {/* Protected routes */}
                 <Route

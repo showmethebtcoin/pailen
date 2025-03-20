@@ -1,5 +1,6 @@
 
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import Logo from '@/components/Logo';
 
 const LandingFooter = () => {
@@ -20,27 +21,26 @@ const LandingFooter = () => {
             <div>
               <h3 className="font-medium mb-3">{t('landing.footer.product')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.features')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.pricing')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.faq')}</a></li>
+                <li><Link to="/faq" className="text-muted-foreground hover:text-foreground">{t('landing.footer.faq')}</Link></li>
+                <li><Link to="/#pricing" className="text-muted-foreground hover:text-foreground">{t('landing.footer.pricing')}</Link></li>
               </ul>
             </div>
             
             <div>
               <h3 className="font-medium mb-3">{t('landing.footer.company')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.about')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.blog')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.contact')}</a></li>
+                <li><Link to="/#about" className="text-muted-foreground hover:text-foreground">{t('landing.footer.about')}</Link></li>
+                <li><Link to="/#blog" className="text-muted-foreground hover:text-foreground">{t('landing.footer.blog')}</Link></li>
+                <li><Link to="/contact" className="text-muted-foreground hover:text-foreground">{t('landing.footer.contact')}</Link></li>
               </ul>
             </div>
             
             <div>
               <h3 className="font-medium mb-3">{t('landing.footer.legal')}</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.privacy')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.terms')}</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">{t('landing.footer.cookies')}</a></li>
+                <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground">{t('landing.footer.privacy')}</Link></li>
+                <li><Link to="/terms" className="text-muted-foreground hover:text-foreground">{t('landing.footer.terms')}</Link></li>
+                <li><Link to="/cookies" className="text-muted-foreground hover:text-foreground">{t('landing.footer.cookies')}</Link></li>
               </ul>
             </div>
           </div>
