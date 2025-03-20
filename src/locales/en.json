@@ -4,7 +4,8 @@
     "dashboard": "Dashboard",
     "students": "Students",
     "settings": "Settings",
-    "welcome": "Welcome",
+    "welcome": "Welcome to {{app}}",
+    "startBuilding": "Start building your amazing project here!",
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
@@ -29,7 +30,52 @@
     "date": "Date",
     "time": "Time",
     "description": "Description",
-    "details": "Details"
+    "details": "Details",
+    "menu": "Menu"
+  },
+  "language": {
+    "current": "Language"
+  },
+  "landing": {
+    "hero": {
+      "title": "The Ultimate Platform for Language Tutors",
+      "subtitle": "Simplify your teaching process, enhance student engagement, and focus on what matters most: teaching.",
+      "getStarted": "Get Started for Free",
+      "learnMore": "Learn More",
+      "signin": "Sign In"
+    },
+    "features": {
+      "title": "Powerful Features for Language Teachers",
+      "subtitle": "Everything you need to manage your teaching business efficiently",
+      "studentManagement": "Student Management",
+      "studentManagementDesc": "Keep track of all your students, their progress, and personalize their learning journey.",
+      "testGeneration": "Test Generation",
+      "testGenerationDesc": "Create customized language tests with AI assistance based on student level and needs.",
+      "scheduling": "Smart Scheduling",
+      "schedulingDesc": "Organize your classes and send automated reminders to avoid missed appointments.",
+      "analytics": "Performance Analytics",
+      "analyticsDesc": "Get insights on student progress and identify areas that need more attention."
+    },
+    "cta": {
+      "title": "Ready to transform your teaching experience?",
+      "subtitle": "Join thousands of language tutors who have improved their teaching process with our platform.",
+      "button": "Start Your Free Trial"
+    },
+    "footer": {
+      "product": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "company": "Company",
+      "about": "About Us",
+      "contact": "Contact Us",
+      "careers": "Careers",
+      "legal": "Legal",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookies Policy",
+      "copyright": "© 2023 Pailen. All rights reserved."
+    }
   },
   "auth": {
     "login": "Login",
@@ -65,7 +111,9 @@
     "welcomeBack": "Welcome back",
     "lastLogin": "Last login",
     "todayClasses": "Today's Classes",
-    "upcomingTests": "Upcoming Tests"
+    "upcomingTests": "Upcoming Tests",
+    "title": "Dashboard",
+    "welcome": "Welcome back"
   },
   "students": {
     "title": "Students",
@@ -75,8 +123,11 @@
     "details": "Student Details",
     "delete": "Delete Student",
     "viewStudent": "View Student",
+    "viewDetails": "View Details",
     "search": "Search students...",
+    "searchPlaceholder": "Search students...",
     "filter": "Filter students",
+    "filterDesc": "Narrow down your students list",
     "all": "All Students",
     "byLanguage": "By Language",
     "byLevel": "By Level",
@@ -107,6 +158,8 @@
     "notFoundOrUnauthorized": "Student not found or unauthorized",
     "startDate": "Start Date",
     "hoursPerWeek": "Hours per Week",
+    "hourPerWeek": "Hour per Week",
+    "hoursWeekly": "Weekly Hours",
     "tests": "Tests",
     "generateTest": "Generate Test",
     "testHistory": "Test History",
@@ -128,7 +181,22 @@
     "topicSaved": "Topic Saved",
     "topicSavedSuccess": "The topic has been saved successfully",
     "topicSaveError": "There was an error saving the topic. Please try again.",
-    "topics": "Topics"
+    "topics": "Topics",
+    "language": "Language",
+    "level": "Level",
+    "started": "Started",
+    "contactInfo": "Contact Information",
+    "studentDetails": "Student Details",
+    "backToList": "Back to List",
+    "found": "found",
+    "total": "total",
+    "allLanguages": "All Languages",
+    "allLevels": "All Levels",
+    "exportCSV": "Export CSV",
+    "exportData": "Export Data",
+    "exportSuccess": "Export Successful",
+    "studentsExported": "students exported to CSV",
+    "created": "Created"
   },
   "tests": {
     "title": "Tests",
@@ -166,6 +234,10 @@
     "preparingPdf": "Preparing PDF...",
     "downloadSuccess": "Download started",
     "downloadFailed": "Download failed"
+  },
+  "lessonTopics": {
+    "title": "Lesson Topics",
+    "description": "Manage topics for your students' next lessons"
   },
   "settings": {
     "title": "Settings",
@@ -249,6 +321,7 @@
     "sendNow": "Send Now",
     "scheduleDelivery": "Schedule Delivery",
     "timeInPast": "The scheduled time must be in the future",
-    "invalidTime": "Invalid Time"
+    "invalidTime": "Invalid Time",
+    "dateRequired": "Date Required"
   }
 }

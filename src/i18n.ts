@@ -25,7 +25,7 @@ i18n
   .init({
     resources,
     fallbackLng: 'es', // Idioma por defecto en español
-    debug: process.env.NODE_ENV === 'development',
+    debug: false, // Desactivamos debug para evitar problemas
     
     interpolation: {
       escapeValue: false, // No es necesario para React
@@ -37,5 +37,11 @@ i18n
       caches: ['localStorage'],
     },
   });
+
+// Asegurarnos de que el idioma se carga correctamente desde localStorage
+const savedLanguage = localStorage.getItem('language');
+if (savedLanguage) {
+  i18n.changeLanguage(savedLanguage);
+}
 
 export default i18n;
