@@ -24,7 +24,7 @@ const generateOpenAITest = async (options) => {
   try {
     // Usando la API de Chat Completions (GPT-4)
     const response = await openai.createChatCompletion({
-      model: "gpt-4o", // Usando el modelo más avanzado
+      model: "gpt-3.5-turbo", // Usando un modelo más disponible y rápido
       messages: [
         {
           role: "system",

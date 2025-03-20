@@ -11,7 +11,7 @@ const sendTestByEmail = async (student, test, pdfPath) => {
     to: student.email,
     from: {
       email: process.env.EMAIL_FROM || 'noreply@languageapp.com',
-      name: 'Language App Teacher'
+      name: process.env.EMAIL_NAME || 'Language Teacher'
     },
     subject: `Tu nuevo test de ${test.language} - Nivel ${test.level}`,
     text: `Hola ${student.name},
@@ -20,7 +20,7 @@ Aquí tienes tu test de ${test.language} de nivel ${test.level}.
 
 ${test.content}
 
-Adjunto encontrarás una versión en PDF del test.
+${pdfPath ? 'Adjunto encontrarás una versión en PDF del test.' : ''}
 
 Buena suerte!
 
@@ -35,7 +35,7 @@ Tu profesor de idiomas`,
           <pre style="white-space: pre-wrap; font-family: inherit;">${test.content}</pre>
         </div>
         
-        <p>Adjunto encontrarás una versión en PDF del test.</p>
+        ${pdfPath ? '<p>Adjunto encontrarás una versión en PDF del test.</p>' : ''}
         
         <p>¡Buena suerte!</p>
         
