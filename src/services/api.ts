@@ -106,6 +106,19 @@ const authService = {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
+  },
+  
+  forgotPassword: async (email) => {
+    const response = await api.post('/auth/forgot-password', { email });
+    return response.data;
+  },
+  
+  resetPassword: async (token, newPassword) => {
+    const response = await api.post('/auth/reset-password', { 
+      token, 
+      password: newPassword 
+    });
+    return response.data;
   }
 };
 
@@ -176,6 +189,26 @@ const testService = {
   
   delete: async (id) => {
     const response = await api.delete(`/tests/${id}`);
+    return response.data;
+  },
+  
+  uploadToDrive: async (testId, fileData) => {
+    const formData = new FormData();
+    formData.append('testId', testId);
+    formData.append('file', fileData);
+    
+    const response = await api.post('/tests/upload-to-drive', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+  
+  downloadFromDrive: async (fileId) => {
+    const response = await api.get(`/tests/download-from-drive/${fileId}`, {
+      responseType: 'blob'
+    });
     return response.data;
   }
 };

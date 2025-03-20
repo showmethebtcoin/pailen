@@ -2,26 +2,33 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Test } from '@/types/student';
-import { Loader2, Send, Download, Copy, Sparkles } from 'lucide-react';
+import { Loader2, Send, Download, Copy, Sparkles, CloudUpload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from 'jspdf';
+import { saveTestToDrive } from '@/utils/googleDrive';
 
 interface TestActionsProps {
   generatedTest: Test | null;
   isGenerating: boolean;
   isSending: boolean;
+  isUploading?: boolean;
+  driveLink?: string;
   onGenerateTest: () => Promise<void>;
   onSendTest: () => Promise<void>;
   onCopyToClipboard: () => void;
+  onUploadToDrive?: () => Promise<void>;
 }
 
 const TestActions: React.FC<TestActionsProps> = ({
   generatedTest,
   isGenerating,
   isSending,
+  isUploading = false,
+  driveLink,
   onGenerateTest,
   onSendTest,
-  onCopyToClipboard
+  onCopyToClipboard,
+  onUploadToDrive
 }) => {
   const { toast } = useToast();
   
@@ -102,6 +109,21 @@ const TestActions: React.FC<TestActionsProps> = ({
       });
     }
   };
+  
+  const handleUploadToDrive = async () => {
+    if (!generatedTest || !onUploadToDrive) return;
+    
+    try {
+      await onUploadToDrive();
+    } catch (error) {
+      console.error("Error uploading to Drive:", error);
+      toast({
+        title: "Upload Failed",
+        description: "Could not upload the test to Google Drive.",
+        variant: "destructive"
+      });
+    }
+  };
 
   if (!generatedTest) {
     return (
@@ -131,6 +153,37 @@ const TestActions: React.FC<TestActionsProps> = ({
         <Download className="mr-2 h-4 w-4" />
         Download PDF
       </Button>
+      {onUploadToDrive && (
+        driveLink ? (
+          <Button 
+            variant="outline" 
+            className="flex-1"
+            onClick={() => window.open(driveLink, '_blank')}
+          >
+            <CloudUpload className="mr-2 h-4 w-4" />
+            View in Drive
+          </Button>
+        ) : (
+          <Button 
+            variant="outline" 
+            onClick={handleUploadToDrive} 
+            disabled={isUploading}
+            className="flex-1"
+          >
+            {isUploading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Uploading...
+              </>
+            ) : (
+              <>
+                <CloudUpload className="mr-2 h-4 w-4" />
+                Save to Drive
+              </>
+            )}
+          </Button>
+        )
+      )}
       <Button onClick={onSendTest} disabled={isSending} className="flex-1">
         {isSending ? (
           <>

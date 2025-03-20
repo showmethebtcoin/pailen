@@ -1,6 +1,8 @@
 
 const User = require('../models/User');
 const { generateToken, generateRefreshToken, verifyToken } = require('../config/jwt');
+const crypto = require('crypto');
+const { sendPasswordResetEmail } = require('../services/email.service');
 
 // Registro de nuevo usuario
 const register = async (req, res) => {
@@ -133,9 +135,84 @@ const refreshToken = async (req, res) => {
   }
 };
 
+// Solicitar restablecimiento de contraseña
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    // Buscar usuario por email
+    const user = await User.findOne({ where: { email } });
+    
+    // Si no existe el usuario, no dar pistas por seguridad
+    if (!user) {
+      return res.status(200).json({ 
+        message: 'Si existe una cuenta con ese email, se enviará un enlace para restablecer la contraseña' 
+      });
+    }
+    
+    // Generar token único para restablecer contraseña
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpires = new Date(Date.now() + 3600000); // 1 hora
+    
+    // Guardar el token y la fecha de expiración en la base de datos
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = resetTokenExpires;
+    await user.save();
+    
+    // Obtener la URL de frontend del entorno
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    
+    // Enviar email con enlace para restablecer contraseña
+    await sendPasswordResetEmail(
+      user.email, 
+      user.name, 
+      `${frontendUrl}/reset-password?token=${resetToken}`
+    );
+    
+    res.status(200).json({ 
+      message: 'Si existe una cuenta con ese email, se enviará un enlace para restablecer la contraseña' 
+    });
+  } catch (error) {
+    console.error('Error al solicitar restablecimiento de contraseña:', error);
+    res.status(500).json({ message: 'Error en el servidor' });
+  }
+};
+
+// Restablecer contraseña
+const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body;
+    
+    // Buscar usuario con el token y verificar que no haya expirado
+    const user = await User.findOne({ 
+      where: { 
+        resetPasswordToken: token,
+        resetPasswordExpires: { $gt: Date.now() }
+      } 
+    });
+    
+    if (!user) {
+      return res.status(400).json({ message: 'Token inválido o expirado' });
+    }
+    
+    // Actualizar contraseña
+    user.password = password;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+    
+    res.status(200).json({ message: 'Contraseña actualizada correctamente' });
+  } catch (error) {
+    console.error('Error al restablecer contraseña:', error);
+    res.status(500).json({ message: 'Error en el servidor' });
+  }
+};
+
 module.exports = {
   register,
   login,
   getProfile,
   refreshToken,
+  forgotPassword,
+  resetPassword
 };

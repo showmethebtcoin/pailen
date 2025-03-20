@@ -5,10 +5,12 @@ import { Student, Test, TestGenerationOptions } from '@/types/student';
 import { sendTestEmail } from '@/utils/email';
 import { useToast } from '@/hooks/use-toast';
 import { testService } from '@/services/api';
+import { saveTestToDrive } from '@/utils/googleDrive';
 
 export function useTestGenerator(student: Student, onTestCreated?: (test: Test) => void) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [options, setOptions] = useState<TestGenerationOptions>({
     language: student.language,
     level: student.level,
@@ -16,10 +18,12 @@ export function useTestGenerator(student: Student, onTestCreated?: (test: Test) 
     includeAnswers: true,
   });
   const [generatedTest, setGeneratedTest] = useState<Test | null>(null);
+  const [driveLink, setDriveLink] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleGenerateTest = async () => {
     setIsGenerating(true);
+    setDriveLink(null);
     try {
       // Intenta primero usar la API del backend para generar el test
       let newTest: Test;
@@ -148,6 +152,52 @@ export function useTestGenerator(student: Student, onTestCreated?: (test: Test) 
       description: "Test content has been copied to clipboard",
     });
   };
+  
+  const handleUploadToDrive = async () => {
+    if (!generatedTest) return;
+    
+    setIsUploading(true);
+    try {
+      // Intenta primero usar la API del backend
+      let savedTest;
+      
+      try {
+        console.log('Trying to upload to Drive through backend API');
+        if (generatedTest.id) {
+          // Convertir el contenido a un Blob para enviar
+          const blob = new Blob([generatedTest.content], { type: 'text/plain' });
+          const file = new File([blob], `${generatedTest.title}.txt`, { type: 'text/plain' });
+          
+          const response = await testService.uploadToDrive(generatedTest.id, file);
+          savedTest = response;
+        }
+      } catch (apiError) {
+        console.log('Backend API upload failed, falling back to client-side upload', apiError);
+        // Si la API falla, usa el método local como respaldo
+        savedTest = await saveTestToDrive(generatedTest);
+      }
+      
+      if (savedTest && (savedTest.webViewLink || savedTest.webContentLink)) {
+        setDriveLink(savedTest.webViewLink || savedTest.webContentLink);
+        
+        toast({
+          title: "Saved to Drive",
+          description: "Test has been successfully saved to Google Drive",
+        });
+      } else {
+        throw new Error("Failed to upload to Drive");
+      }
+    } catch (error) {
+      console.error("Error uploading to Drive:", error);
+      toast({
+        title: "Drive Upload Failed",
+        description: "There was an error saving the test to Google Drive.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   return {
     options,
@@ -155,8 +205,11 @@ export function useTestGenerator(student: Student, onTestCreated?: (test: Test) 
     generatedTest,
     isGenerating,
     isSending,
+    isUploading,
+    driveLink,
     handleGenerateTest,
     handleSendTest,
-    handleCopyToClipboard
+    handleCopyToClipboard,
+    handleUploadToDrive
   };
 }
