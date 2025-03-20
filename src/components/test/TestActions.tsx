@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Test } from '@/types/student';
+import { Test, Student } from '@/types/student';
 import { useToast } from '@/hooks/use-toast';
 import { generateTestPdf } from '@/utils/pdfGenerator';
 
@@ -13,6 +13,7 @@ import SendButton from './buttons/SendButton';
 
 interface TestActionsProps {
   generatedTest: Test | null;
+  student?: Student;
   isGenerating: boolean;
   isSending: boolean;
   isUploading?: boolean;
@@ -25,6 +26,7 @@ interface TestActionsProps {
 
 const TestActions: React.FC<TestActionsProps> = ({
   generatedTest,
+  student,
   isGenerating,
   isSending,
   isUploading = false,
@@ -98,7 +100,26 @@ const TestActions: React.FC<TestActionsProps> = ({
         />
       )}
       
-      <SendButton isSending={isSending} onSend={onSendTest} />
+      {student ? (
+        <SendButton 
+          test={generatedTest}
+          student={student}
+          isSending={isSending} 
+          onSendTest={onSendTest} 
+        />
+      ) : (
+        <button 
+          className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-4 py-2"
+          onClick={onSendTest}
+          disabled={isSending}
+        >
+          {isSending ? (
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+          ) : (
+            "Send"
+          )}
+        </button>
+      )}
     </div>
   );
 };

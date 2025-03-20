@@ -48,6 +48,7 @@ const TestGenerator: React.FC<TestGeneratorProps> = ({ student, onTestCreated })
       <CardFooter className="flex justify-between">
         <TestActions 
           generatedTest={generatedTest}
+          student={student}
           isGenerating={isGenerating}
           isSending={isSending}
           isUploading={isUploading}
