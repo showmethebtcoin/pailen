@@ -31,7 +31,7 @@ services:
     container_name: language_app_frontend
     restart: always
     ports:
-      - "8081:80"  # Changed from 80:80 to 8081:80
+      - "8080:80"  # Changed to 8080:80 for Lovable environment
     depends_on:
       - backend
     networks:
