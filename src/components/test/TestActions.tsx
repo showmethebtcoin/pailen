@@ -5,14 +5,13 @@ import { Test } from '@/types/student';
 import { Loader2, Send, Download, Copy, Sparkles, CloudUpload } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { jsPDF } from 'jspdf';
-import { saveTestToDrive } from '@/utils/googleDrive';
 
 interface TestActionsProps {
   generatedTest: Test | null;
   isGenerating: boolean;
   isSending: boolean;
   isUploading?: boolean;
-  driveLink?: string;
+  driveLink?: string | null;
   onGenerateTest: () => Promise<void>;
   onSendTest: () => Promise<void>;
   onCopyToClipboard: () => void;
