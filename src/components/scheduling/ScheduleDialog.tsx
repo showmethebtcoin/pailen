@@ -58,6 +58,7 @@ const ScheduleDialog: React.FC<ScheduleDialogProps> = ({
 
       // Check if the scheduled time is in the past
       const currentTime = new Date();
+      // Fix: Compare timestamps (numbers) instead of Date objects
       if (scheduledFor.getTime() <= currentTime.getTime()) {
         toast({
           title: t('scheduling.invalidTime'),
@@ -88,7 +89,7 @@ const ScheduleDialog: React.FC<ScheduleDialogProps> = ({
       toast({
         title: t('scheduling.taskScheduled'),
         description: t('scheduling.willBeSentAt', { 
-          time: format(scheduledFor, 'PPpp') 
+          time: format(scheduledFor, 'PPP') 
         }),
       });
 
