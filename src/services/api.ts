@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 // Configuración base de axios
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// In Docker environment, the API URL is relative to the domain
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Crear instancia de axios
 const api = axios.create({

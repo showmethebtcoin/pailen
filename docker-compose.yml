@@ -31,7 +31,7 @@ services:
     container_name: language_app_frontend
     restart: always
     ports:
-      - "80:80"
+      - "8081:80"  # Changed from 80:80 to 8081:80
     depends_on:
       - backend
     networks:

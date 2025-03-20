@@ -10,7 +10,7 @@ if (process.env.DATABASE_URL) {
     dialect: 'postgres',
     logging: process.env.NODE_ENV === 'development' ? console.log : false,
     dialectOptions: {
-      ssl: process.env.NODE_ENV === 'production' ? {
+      ssl: process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL.includes('localhost') && !process.env.DATABASE_URL.includes('db:5432') ? {
         require: true,
         rejectUnauthorized: false
       } : false
@@ -29,8 +29,8 @@ if (process.env.DATABASE_URL) {
     process.env.DB_USER,
     process.env.DB_PASS,
     {
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
+      host: process.env.DB_HOST || 'db', // Default to 'db' for Docker environment
+      port: process.env.DB_PORT || 5432,
       dialect: 'postgres',
       logging: process.env.NODE_ENV === 'development' ? console.log : false,
       pool: {
