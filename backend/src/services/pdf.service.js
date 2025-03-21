@@ -35,10 +35,16 @@ const generatePDF = async (testContent, options = {}) => {
  * @returns {Promise<void>}
  */
 const renderPdfFromHtml = async (htmlContent, outputPath) => {
-  // Launch Puppeteer
+  // Launch Puppeteer with proper configuration for Docker environment
   const browser = await puppeteer.launch({
     headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox'] // Necessary for Docker environments
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu'
+    ]
   });
   
   try {

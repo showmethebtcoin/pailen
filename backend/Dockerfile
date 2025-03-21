@@ -1,22 +1,33 @@
 
 FROM node:18-alpine
 
+# Instalar dependencias necesarias para Chrome y Puppeteer
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    nodejs \
+    yarn
+
+# Establecer variables de entorno para Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
 WORKDIR /app
 
-# Copy package files first for better caching
 COPY package*.json ./
 
-# Install dependencies
+# Instalar dependencias
 RUN npm install
 
-# Copy application files
+# Copiar el código fuente
 COPY . .
 
-# Make sure we set the NODE_ENV to production
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
-
-# Add health check capability
+# Copiar el script de healthcheck
 COPY docker-healthcheck.sh /docker-healthcheck.sh
 RUN chmod +x /docker-healthcheck.sh
 

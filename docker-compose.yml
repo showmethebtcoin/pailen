@@ -1,4 +1,3 @@
-
 version: '3.8'
 
 services:
@@ -28,6 +27,8 @@ services:
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-your_stripe_secret_key}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-your_stripe_webhook_secret}
       - TOKEN_REFRESH_INTERVAL=${TOKEN_REFRESH_INTERVAL:-86400} # 24 horas en segundos
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
     volumes:
       - ./backend:/app
       - /app/node_modules
