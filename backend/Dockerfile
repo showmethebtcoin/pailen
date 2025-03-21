@@ -11,7 +11,8 @@ RUN apk add --no-cache \
     ca-certificates \
     ttf-freefont \
     nodejs \
-    yarn
+    yarn \
+    wget
 
 # Establecer variables de entorno para Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
@@ -31,7 +32,8 @@ COPY . .
 COPY docker-healthcheck.sh /docker-healthcheck.sh
 RUN chmod +x /docker-healthcheck.sh
 
-HEALTHCHECK --interval=30s --timeout=3s CMD /docker-healthcheck.sh
+# Aumentar el tiempo de espera del healthcheck y el periodo inicial
+HEALTHCHECK --interval=30s --timeout=10s --retries=5 --start-period=60s CMD /docker-healthcheck.sh
 
 EXPOSE 5000
 

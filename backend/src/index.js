@@ -73,6 +73,11 @@ app.use('/api/tests', testRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/scheduled-tasks', scheduledTaskRoutes);
 
+// Añadir endpoint para healthcheck
+app.get('/api/auth/health', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'Backend is healthy' });
+});
+
 // Ruta de prueba
 app.get('/', (req, res) => {
   res.json({ message: 'Bienvenido a la API de Language App' });
