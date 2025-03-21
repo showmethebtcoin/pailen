@@ -1,3 +1,4 @@
+
 version: '3.8'
 
 services:
@@ -6,7 +7,6 @@ services:
       context: ./backend
       args:
         - NODE_ENV=${NODE_ENV:-production}
-    container_name: language_app_backend
     restart: always
     deploy:
       replicas: ${BACKEND_REPLICAS:-2}
