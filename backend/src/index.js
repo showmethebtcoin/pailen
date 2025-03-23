@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -73,9 +72,9 @@ app.use('/api/tests', testRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/scheduled-tasks', scheduledTaskRoutes);
 
-// Añadir endpoint para healthcheck
+// Añadir endpoint para healthcheck (modificado para formato exacto)
 app.get('/api/auth/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Backend is healthy' });
+  res.status(200).json({ status: "OK" });
 });
 
 // Ruta de prueba
@@ -120,7 +119,10 @@ async function startServer() {
     });
   } catch (error) {
     console.error('Error al iniciar el servidor:', error);
-    logger.error('Error al iniciar el servidor:', error);
+    // Esperar antes de salir para evitar ciclos de reinicio rápidos
+    setTimeout(() => {
+      process.exit(1);
+    }, 3000);
   }
 }
 

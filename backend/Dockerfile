@@ -1,7 +1,7 @@
 
 FROM node:18-alpine
 
-# Instalar dependencias necesarias para Chrome y Puppeteer
+# Instalar dependencias necesarias para Chrome, Puppeteer y herramientas de red
 RUN apk add --no-cache \
     chromium \
     nss \
@@ -12,7 +12,7 @@ RUN apk add --no-cache \
     ttf-freefont \
     nodejs \
     yarn \
-    wget
+    curl
 
 # Establecer variables de entorno para Puppeteer
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
@@ -22,18 +22,18 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Instalar dependencias
-RUN npm install
+# Instalar dependencias sin caching para asegurarnos que todo esté actualizado
+RUN npm ci --only=production
 
 # Copiar el código fuente
 COPY . .
 
-# Copiar el script de healthcheck
+# Copiar el script de healthcheck y hacerlo ejecutable
 COPY docker-healthcheck.sh /docker-healthcheck.sh
 RUN chmod +x /docker-healthcheck.sh
 
-# Aumentar el tiempo de espera del healthcheck y el periodo inicial
-HEALTHCHECK --interval=30s --timeout=10s --retries=5 --start-period=60s CMD /docker-healthcheck.sh
+# Configurar healthcheck
+HEALTHCHECK --interval=60s --timeout=30s --retries=5 --start-period=120s CMD /docker-healthcheck.sh
 
 EXPOSE 5000
 
