@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { Toaster } from '@/components/ui/toaster';
 import Landing from '@/pages/Landing';
@@ -22,6 +22,7 @@ import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 import LessonTopics from '@/pages/LessonTopics';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import AppLayout from '@/components/AppLayout';
 
 function App() {
   return (
@@ -34,13 +35,15 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           
-          {/* Rutas protegidas */}
+          {/* Rutas protegidas con AppLayout */}
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/students" element={<Students />} />
-            <Route path="/lesson-topics" element={<LessonTopics />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/subscription" element={<Subscription />} />
+            <Route element={<AppLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/students" element={<Students />} />
+              <Route path="/lesson-topics" element={<LessonTopics />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/subscription" element={<Subscription />} />
+            </Route>
           </Route>
           
           {/* Otras páginas */}
