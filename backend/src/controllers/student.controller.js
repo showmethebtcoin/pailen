@@ -1,4 +1,5 @@
 const Student = require('../models/Student');
+const { LessonTopicsHistory } = require('../models');
 const lessonTopicService = require('../services/lesson-topic.service');
 
 // Obtener todos los estudiantes del usuario autenticado
@@ -44,7 +45,6 @@ const createStudent = async (req, res) => {
   try {
     const { name, email, language, level, hoursPerWeek, startDate } = req.body;
     
-    // Crear estudiante asociado al usuario autenticado
     const student = await Student.create({
       name,
       email,
@@ -66,31 +66,40 @@ const createStudent = async (req, res) => {
 const updateStudent = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, language, level, hoursPerWeek, startDate } = req.body;
+    const { name, email, language, level, hoursPerWeek, startDate, nextLessonTopic } = req.body;
     
-    // Buscar el estudiante
     const student = await Student.findOne({
       where: {
         id,
         userId: req.user.id,
       },
     });
-    
+
     if (!student) {
       return res.status(404).json({ message: 'Estudiante no encontrado' });
     }
-    
-    // Actualizar datos
-    const updatedStudent = await student.update({
-      name,
-      email,
-      language,
-      level,
-      hoursPerWeek: parseFloat(hoursPerWeek) || student.hoursPerWeek,
-      startDate: startDate || student.startDate,
-    });
-    
-    res.json(updatedStudent);
+
+    const previousTopic = student.nextLessonTopic;
+
+    student.name = name ?? student.name;
+    student.email = email ?? student.email;
+    student.language = language ?? student.language;
+    student.level = level ?? student.level;
+    student.hoursPerWeek = parseFloat(hoursPerWeek) || student.hoursPerWeek;
+    student.startDate = startDate || student.startDate;
+    student.nextLessonTopic = nextLessonTopic ?? student.nextLessonTopic;
+
+    await student.save();
+
+    if (nextLessonTopic && nextLessonTopic !== previousTopic) {
+      await LessonTopicsHistory.create({
+        studentId: student.id,
+        topic: nextLessonTopic,
+        date: new Date(),
+      });
+    }
+
+    res.json(student);
   } catch (error) {
     console.error('Error al actualizar estudiante:', error);
     res.status(500).json({ message: 'Error en el servidor' });
@@ -101,22 +110,20 @@ const updateStudent = async (req, res) => {
 const deleteStudent = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    // Buscar el estudiante
+
     const student = await Student.findOne({
       where: {
         id,
         userId: req.user.id,
       },
     });
-    
+
     if (!student) {
       return res.status(404).json({ message: 'Estudiante no encontrado' });
     }
-    
-    // Eliminar estudiante
+
     await student.destroy();
-    
+
     res.json({ message: 'Estudiante eliminado correctamente' });
   } catch (error) {
     console.error('Error al eliminar estudiante:', error);
@@ -129,13 +136,13 @@ const updateStudentLessonTopic = async (req, res) => {
   try {
     const { id } = req.params;
     const { topic } = req.body;
-    
+
     const result = await lessonTopicService.updateStudentLessonTopic(id, req.user.id, topic);
-    
+
     if (result.error) {
       return res.status(result.statusCode || 400).json({ message: result.error });
     }
-    
+
     res.json(result);
   } catch (error) {
     console.error('Error al actualizar tema de clase:', error);
@@ -147,13 +154,13 @@ const updateStudentLessonTopic = async (req, res) => {
 const getStudentLessonTopic = async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     const result = await lessonTopicService.getStudentLessonTopic(id, req.user.id);
-    
+
     if (result.error) {
       return res.status(result.statusCode || 400).json({ message: result.error });
     }
-    
+
     res.json(result);
   } catch (error) {
     console.error('Error al obtener tema de clase:', error);
@@ -168,5 +175,5 @@ module.exports = {
   updateStudent,
   deleteStudent,
   updateStudentLessonTopic,
-  getStudentLessonTopic
+  getStudentLessonTopic,
 };

@@ -23,7 +23,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Instalar dependencias sin caching para asegurarnos que todo esté actualizado
-RUN npm ci --only=production
+RUN npm install --omit=dev
 
 # Copiar el código fuente
 COPY . .

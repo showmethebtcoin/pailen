@@ -1,12 +1,11 @@
-
 const Student = require('../models/Student');
 const User = require('../models/User');
+const LessonTopicsHistory = require('../models/LessonTopicsHistory');
 const { Op } = require('sequelize');
 const { sendLessonTopicEmail } = require('./email.service');
 
 // Actualizar el tema de la próxima clase para un estudiante
 const updateStudentLessonTopic = async (studentId, userId, topic) => {
-  // Verificar que el estudiante pertenece al usuario
   const student = await Student.findOne({
     where: {
       id: studentId,
@@ -21,7 +20,14 @@ const updateStudentLessonTopic = async (studentId, userId, topic) => {
   // Actualizar el tema
   await student.update({ nextLessonTopic: topic });
 
-  return { success: true, message: 'Tema actualizado correctamente' };
+  // Guardar en el historial
+  await LessonTopicsHistory.create({
+    studentId: student.id,
+    topic,
+    date: new Date(),
+  });
+
+  return { success: true, message: 'Tema actualizado y guardado en historial' };
 };
 
 // Obtener el tema de la próxima clase para un estudiante
@@ -43,7 +49,6 @@ const getStudentLessonTopic = async (studentId, userId) => {
 // Enviar emails con los temas de la próxima clase
 const sendWeeklyLessonTopics = async (logger) => {
   try {
-    // Obtener todos los estudiantes con temas definidos
     const students = await Student.findAll({
       where: {
         nextLessonTopic: {
@@ -62,7 +67,6 @@ const sendWeeklyLessonTopics = async (logger) => {
 
     logger.info(`Encontrados ${students.length} estudiantes con temas para enviar`);
 
-    // Enviar email a cada estudiante
     let successCount = 0;
     for (const student of students) {
       try {
@@ -74,7 +78,7 @@ const sendWeeklyLessonTopics = async (logger) => {
     }
 
     logger.info(`Se han enviado ${successCount} emails de temas de clase correctamente`);
-    
+
     return { success: true, count: successCount };
   } catch (error) {
     logger.error(`Error al enviar emails de temas: ${error.message}`);
@@ -91,7 +95,7 @@ const clearAllLessonTopics = async (logger) => {
     );
 
     logger.info(`Se han limpiado los temas de ${result[0]} estudiantes`);
-    
+
     return { success: true, count: result[0] };
   } catch (error) {
     logger.error(`Error al limpiar temas: ${error.message}`);

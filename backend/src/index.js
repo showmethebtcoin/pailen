@@ -13,6 +13,7 @@ const stripeRoutes = require('./routes/stripe.routes');
 const scheduledTaskRoutes = require('./routes/scheduled-task.routes');
 const { startScheduledTasks } = require('./services/scheduler.service');
 const { startQueueProcessor } = require('./utils/redis');
+const lessonTopicsHistoryRoutes = require('./routes/lessonTopicsHistory.routes');
 
 // Configuración de Winston para logs
 const logger = winston.createLogger({
@@ -71,6 +72,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/tests', testRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/scheduled-tasks', scheduledTaskRoutes);
+app.use('/api/lesson-topics-history', lessonTopicsHistoryRoutes);
 
 // Añadir endpoint para healthcheck (modificado para formato exacto)
 app.get('/api/auth/health', (req, res) => {

@@ -1,4 +1,3 @@
-
 {
   "name": "language-app-backend",
   "version": "1.0.0",
@@ -21,11 +20,12 @@
     "morgan": "^1.10.0",
     "node-cron": "^3.0.2",
     "openai": "^3.2.1",
-    "pg": "^8.10.0",
+    "pg": "^8.14.1",
     "pg-hstore": "^2.3.4",
     "puppeteer": "^19.11.1",
     "redis": "^4.6.6",
-    "sequelize": "^6.31.0",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.2",
     "stripe": "^12.0.0",
     "winston": "^3.8.2"
   },
